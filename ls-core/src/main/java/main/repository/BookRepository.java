@@ -1,11 +1,10 @@
-package controller;
+package main.repository;
 
 import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import entities.Book;
-
+import main.entities.Book;
 
 /**
  * @author n.frantzen <nils.frantzen@rwth-aachen.de>
