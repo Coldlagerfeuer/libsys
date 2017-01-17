@@ -6,6 +6,7 @@ package main.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import main.entities.Book;
@@ -27,5 +28,9 @@ public class BookController {
 		return bookRepository.findAll();
 	}
 	
-	
+	@RequestMapping(value = "/quicksearch", method = RequestMethod.GET)
+	public Iterable<Book> quickSearch(@RequestParam(value = "name") String name) {
+		System.out.println("quuicksearch for " + name);
+		return bookRepository.findByNameContaining(name);
+	}
 }

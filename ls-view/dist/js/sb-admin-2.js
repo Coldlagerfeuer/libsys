@@ -1,11 +1,12 @@
-$(function() {
-    $('#side-menu').metisMenu();
-});
-
 //Loads the correct sidebar on window load,
 //collapses the sidebar on window resize.
-// Sets the min-height of #page-wrapper to window size
+//Sets the min-height of #page-wrapper to window size
 $(function() {
+	
+	$('#menu').load('menu.html', function(){
+		$('#side-menu').metisMenu();
+	});
+	
     $(window).bind("load resize", function() {
         var topOffset = 50;
         var width = (this.window.innerWidth > 0) ? this.window.innerWidth : this.screen.width;
@@ -29,11 +30,14 @@ $(function() {
         return this.href == url;
     }).addClass('active').parent();
 
-    while (true) {
-        if (element.is('li')) {
-            element = element.parent().addClass('in').parent();
-        } else {
-            break;
-        }
+    while(element.is('li')) {
+    	element = element.parent().addClass('in').parent();
     }
+//    while (true) {
+//        if (element.is('li')) {
+//            element = element.parent().addClass('in').parent();
+//        } else {
+//            break;
+//        }
+//    }
 });

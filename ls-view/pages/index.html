@@ -22,6 +22,9 @@
 <!-- Custom Fonts -->
 <link href="../vendor/font-awesome/css/font-awesome.min.css"
 	rel="stylesheet" type="text/css">
+	
+	
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -631,6 +634,7 @@
 
 	<!-- jQuery -->
 	<!-- <script src="../vendor/jquery/jquery.min.js"></script> -->
+	  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 	<!-- Bootstrap Core JavaScript -->
 	<script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
@@ -644,33 +648,74 @@
 	<script src="../data/morris-data.js"></script>
 
 	<!-- Custom Theme JavaScript -->
-	<script src="../dist/js/sb-admin-2.js"></script>
+	<!-- <script src="../dist/js/sb-admin-2.js"></script> -->
 
 	<script type="text/javascript">
 	
 	var serverUrl = "http://localhost:9000/"
 	
-		$(document).ready(function() {
-			$('#menu').load('menu.html', function(){
-				$('#side-menu').metisMenu();
-			});
+		var books = [];
+	
+	$(document).ready(function() {
+		
+		
+		 $.ajax({
+			url : serverUrl + "books"
+	    }).then(function(data) {
+			$('#book-item-count').html(data.length);
+			for ( var i in data) {
+			    book = data[i];
+				books.push(book.name);
+				if (i >= 5) {
+					continue;
+			    }
+			    $('#book-items').append(
+				    '<a href="#" class="list-group-item"> <i class="fa fa-comment fa-fw"></i> ' 
+				    + book.name+ '<span class="pull-right text-muted small"><em>' + book.autor + '</em> </span>'
+				);
+			}
 			
-			 $.ajax({
-				url : serverUrl + "books"
-		    }).then(function(data) {
-				$('#book-item-count').html(data.length);
-				for ( var i in data) {
-					if (i >= 5) {
-						break;
-				    }
-				    book = data[i];
-				    $('#book-items').append(
-					    '<a href="#" class="list-group-item"> <i class="fa fa-comment fa-fw"></i> ' 
-					    + book.name+ '<span class="pull-right text-muted small"><em>' + book.autor + '</em> </span>'
-					);
-				}
-			});
 		});
+	
+		$(document).on('click', '#SearchButton', function(){
+			search($("#SearchField").val());
+	    });
+		 
+		
+	
+		
+	/* $('#SearchField').keypress(function(e) { */
+		$(document).on('keyup', '#SearchField', function(e){
+			//console.log("SearchField - keypress: " + $(this).val());
+			//console.log("SearchField - keypress: " + String.fromCharCode(e.which));
+	    if (e.which == 13) {
+	    	search($(this).val());
+	    } else {
+	    	console.log(books);
+	   	 $("#SearchField").autocomplete({
+	   		source: books 
+	   	 });
+	    	
+	    }
+	});
+
+	
+		
+	
+/* 	$('#menu').load('menu.html', function(){
+		$('#side-menu').metisMenu();
+	}); */
+});
+	
+function search(searchText) {
+	console.log("PING");
+	// If searchText = bookname -> open book website, else site with search results
+	
+	
+   	url = "/list_books.html?name=" + $('#SearchField').val();
+    window.location.href = url;
+}
+	
 	</script>
 
 
