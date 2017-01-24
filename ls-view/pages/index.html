@@ -22,9 +22,10 @@
 <!-- Custom Fonts -->
 <link href="../vendor/font-awesome/css/font-awesome.min.css"
 	rel="stylesheet" type="text/css">
-	
-	
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+
+<link rel="stylesheet"
+	href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -69,7 +70,7 @@
 						<div class="panel-heading">
 							<div class="row">
 								<div class="col-xs-3">
-									<i class="fa fa-comments fa-5x"></i>
+									<i class="fa fa-book fa-5x"></i>
 								</div>
 								<div class="col-xs-9 text-right">
 									<div id="book-item-count" class="huge">0</div>
@@ -77,10 +78,10 @@
 								</div>
 							</div>
 						</div>
-						<a href="#">
+						<a href="list-books.html">
 							<div class="panel-footer">
-								<span class="pull-left">View All</span> <span
-									class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+								<span class="pull-left">View All</span> <span class="pull-right"><i
+									class="fa fa-arrow-circle-right"></i></span>
 								<div class="clearfix"></div>
 							</div>
 						</a>
@@ -91,11 +92,11 @@
 						<div class="panel-heading">
 							<div class="row">
 								<div class="col-xs-3">
-									<i class="fa fa-tasks fa-5x"></i>
+									<i class="fa fa-exchange fa-5x"></i>
 								</div>
 								<div class="col-xs-9 text-right">
 									<div class="huge">12</div>
-									<div>New Tasks!</div>
+									<div>Lent Books!</div>
 								</div>
 							</div>
 						</div>
@@ -113,11 +114,11 @@
 						<div class="panel-heading">
 							<div class="row">
 								<div class="col-xs-3">
-									<i class="fa fa-shopping-cart fa-5x"></i>
+									<i class="fa fa-comments fa-5x"></i>
 								</div>
 								<div class="col-xs-9 text-right">
 									<div class="huge">124</div>
-									<div>New Orders!</div>
+									<div>New Comments!</div>
 								</div>
 							</div>
 						</div>
@@ -164,10 +165,11 @@
 						<!-- /.panel-heading -->
 						<div class="panel-body">
 							<div id="book-items" class="list-group">
-							<!-- Filled by ajax -->
+								<!-- Filled by ajax -->
 							</div>
 							<!-- /.list-group -->
-							<a href="#" class="btn btn-default btn-block">View All Books</a>
+							<a href="list-books.html" class="btn btn-default btn-block">View
+								All Books</a>
 						</div>
 						<!-- /.panel-body -->
 					</div>
@@ -632,9 +634,8 @@
 	</div>
 	<!-- /#wrapper -->
 
-	<!-- jQuery -->
-	<!-- <script src="../vendor/jquery/jquery.min.js"></script> -->
-	  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<!-- TODO script runterladen -->
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 	<!-- Bootstrap Core JavaScript -->
 	<script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
@@ -647,74 +648,32 @@
 	<script src="../vendor/morrisjs/morris.min.js"></script>
 	<script src="../data/morris-data.js"></script>
 
-	<!-- Custom Theme JavaScript -->
-	<!-- <script src="../dist/js/sb-admin-2.js"></script> -->
-
 	<script type="text/javascript">
 	
-	var serverUrl = "http://localhost:9000/"
-	
-		var books = [];
+
+	var booknames = []; // For autocomplete
 	
 	$(document).ready(function() {
-		
-		
 		 $.ajax({
 			url : serverUrl + "books"
 	    }).then(function(data) {
 			$('#book-item-count').html(data.length);
 			for ( var i in data) {
 			    book = data[i];
-				books.push(book.name);
+			    booknames.push(book.name);
 				if (i >= 5) {
 					continue;
 			    }
 			    $('#book-items').append(
-				    '<a href="#" class="list-group-item"> <i class="fa fa-comment fa-fw"></i> ' 
+				    '<a href="book.html?name=' + book.name + '" class="list-group-item"> <i class="fa fa-comment fa-fw"></i> ' 
 				    + book.name+ '<span class="pull-right text-muted small"><em>' + book.autor + '</em> </span>'
 				);
 			}
 			
 		});
 	
-		$(document).on('click', '#SearchButton', function(){
-			search($("#SearchField").val());
-	    });
-		 
-		
 	
-		
-	/* $('#SearchField').keypress(function(e) { */
-		$(document).on('keyup', '#SearchField', function(e){
-			//console.log("SearchField - keypress: " + $(this).val());
-			//console.log("SearchField - keypress: " + String.fromCharCode(e.which));
-	    if (e.which == 13) {
-	    	search($(this).val());
-	    } else {
-	    	console.log(books);
-	   	 $("#SearchField").autocomplete({
-	   		source: books 
-	   	 });
-	    	
-	    }
-	});
-
-	
-		
-	
-/* 	$('#menu').load('menu.html', function(){
-		$('#side-menu').metisMenu();
-	}); */
 });
-	
-function search(searchText) {
-	console.log("PING");
-	// If searchText = bookname -> open book website, else site with search results
-	
-	
-   	url = "/list_books.html?name=" + $('#SearchField').val();
-    window.location.href = url;
-}
 	
 	</script>
 

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package main.repository;
 
 import main.entities.Book;
@@ -15,4 +12,5 @@ public interface BookDataProvider {
 
 	Book getBookDataForIsbn(long isbn);
 	
+	Book getBookDataForIsbn(String isbn);
 }
