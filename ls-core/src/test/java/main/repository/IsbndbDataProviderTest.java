@@ -3,9 +3,10 @@ package main.repository;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import isdndb.IsbndbDataProvider;
 import main.entities.Book;
+import main.isbndb.IsbndbDataProvider;
 
 /**
  * @author n.frantzen <nils.frantzen@rwth-aachen.de>
@@ -13,11 +14,11 @@ import main.entities.Book;
  */
 public class IsbndbDataProviderTest {
 
-	private static BookDataProvider bookDataProvider;
+	@Autowired
+	private BookDataProvider bookDataProvider;
 
 	@BeforeClass
 	public static void init() {
-		bookDataProvider = new IsbndbDataProvider();
 
 	}
 

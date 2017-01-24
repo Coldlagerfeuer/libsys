@@ -1,30 +1,33 @@
 package main.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import isdndb.IsbndbDataProvider;
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+
 import main.entities.Book;
+import main.isbndb.IsbndbDataProvider;
 import main.repository.BookDataProvider;
 
 /**
  * @author n.frantzen <nils.frantzen@rwth-aachen.de>
  *
  */
+@Controller
 public class BookDataProviderController {
 
-	private static BookDataProviderController instance;
-
 	private List<BookDataProvider> dataProvider;
+	
+	@Autowired
+	private IsbndbDataProvider isbndbDataProvider;
 
-	public static BookDataProviderController getInstance() {
-		if (instance == null) {
-			instance = new BookDataProviderController();
-		}
-		return instance;
-	}
-
-	private BookDataProviderController() {
-		dataProvider.add(new IsbndbDataProvider());
+	@PostConstruct
+	private void init() {
+		dataProvider = new ArrayList<>();
+		dataProvider.add( isbndbDataProvider);
 	}
 
 	/**

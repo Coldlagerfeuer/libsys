@@ -84,7 +84,7 @@ function getQueryVariable(variable) {
 			return pair[1].replaceAll("%20"," ");
 		}
 	}
-	return (false);
+	return null;
 }
 
 function search(searchText) {

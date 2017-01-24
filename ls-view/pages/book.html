@@ -53,8 +53,15 @@
 
 		<div id="page-wrapper">
 			<div class="row">
-				<div class="col-lg-12">
+				<div class="col-lg-11">
 					<h1 id="book-title" class="page-header">BLANK</h1>
+				</div>
+				<div class="col-lg-1">
+					<h1>
+						<button type="button" class="btn btn-default btn-circle btn-xl">
+							<i class="fa fa-cog"></i>
+						</button>
+					</h1>
 				</div>
 				<!-- /.col-lg-12 -->
 			</div>
@@ -108,38 +115,47 @@
 	<script src="../vendor/metisMenu/metisMenu.min.js"></script>
 
 	<script type="text/javascript">
-	$(document).ready(function() {
-		var bookname = getQueryVariable("name");
-		var isbn = getQueryVariable("isbn");
-		if (name != null || isbn != null) {
-			var book = null;
-			var url = null;
-			if (name != null) {
-				console.log(bookname);
-				url = serverUrl + "books/getByName?name=" + bookname;
-			} else {
-				console.log(isbn);
-				url = serverUrl + "books/getByIsbn?isbn=" + isbn;
+		$(document).ready(function() {
+			var bookname = getQueryVariable("name");
+			var isbn = getQueryVariable("isbn");
+			console.log("book: " + bookname);
+			console.log("isbn: " + isbn);
+			if (name != null || isbn != null) {
+				var book = null;
+				var url = null;
+				if (bookname != null) {
+					url = serverUrl + "books/getByName?name=" + bookname;
+				} else {
+					url = serverUrl + "books/getByIsbn?isbn=" + isbn;
+				}
+				console.log("url: " + url);
+				$.ajax({
+					url: url
+				}).then(function(data) {
+					console.log(data);
+					console.log(data);
+					if (data != null) {
+						$("#book-title").text(data.name);
+						$("#book-author").text("");
+						console.log(data.authors);
+						for ( var i in data.authors) {
+							var author = data.authors[i];
+							console.log(author);
+							console.log(author.name);
+							$("#book-author").append(author.name + "</br>");
+						}
+						/* $("#book-author").text(data.author); */
+						$("#book-description").text(data.description);
+						var imageurl = "http://covers.openlibrary.org/b/isbn/" + book-isbn + ".jpg"
+						 $("#book-image").attr("src", imageurl); 
+						
+					} else {
+						// TODO
+						console.log("No or multiple books found");
+					}
+				});
 			}
-			$.ajax({
-				url : url;
-		    }).then(function(data) {
-		    	console.log(data);
-		    	if (data.length == 1) {
-					var book = data[0];
-				    $("#book-title").text(book.name);
-		    		$("#book-author").text(book.author);
-		    		$("#book-description").text(book.description);
-		    	} else {
-		    		// TODO
-		    		console.log("No or multiple books found");
-		    	}
-		   	}
-    		/* $("#book-image").attr("src", book.image); */
-		}
-    });
-		
-	});
+		});
 	</script>
 
 

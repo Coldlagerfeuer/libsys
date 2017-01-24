@@ -1,5 +1,5 @@
 
-package isdndb.entities;
+package main.isbndb.entities;
 
 import java.util.HashMap;
 import java.util.List;

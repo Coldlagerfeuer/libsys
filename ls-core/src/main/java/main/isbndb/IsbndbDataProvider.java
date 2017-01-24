@@ -1,23 +1,35 @@
-package isdndb;
+package main.isbndb;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import isdndb.entities.ResponseIsdnDb;
-import main.controller.BookController;
+import main.controller.AuthorController;
+import main.entities.Author;
 import main.entities.Book;
+import main.isbndb.entities.AuthorData;
+import main.isbndb.entities.BookData;
+import main.isbndb.entities.ResponseIsdnDb;
 import main.repository.BookDataProvider;
 
 /**
  * @author n.frantzen <nils.frantzen@rwth-aachen.de>
  *
  */
+@Component
 public class IsbndbDataProvider implements BookDataProvider {
 
+	private static final Logger log = LoggerFactory.getLogger(IsbndbDataProvider.class);
+	
 	/**
 	 * %s = my-api-key %n = isbn as long
 	 */
@@ -25,6 +37,11 @@ public class IsbndbDataProvider implements BookDataProvider {
 
 	private static final String API_KEY = "RZOMN8HX"; // TODO klartext ändern
 
+	@Autowired
+	private AuthorController authorController;
+	
+	
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -43,17 +60,50 @@ public class IsbndbDataProvider implements BookDataProvider {
 	 */
 	@Override
 	public Book getBookDataForIsbn(String isbn) {
-		// RestTemplate restTemplate = new RestTemplate();
-
-		RestTemplate restTemplate = getIsdndbRestTemplate();
-
+		// TODO check for Internet connection
+		
+		RestTemplate restTemplate = getIsbndbRestTemplate();
 		ResponseIsdnDb responseObject = restTemplate.getForObject(String.format(URL_S, API_KEY, isbn),
 				ResponseIsdnDb.class);
-		System.out.println(responseObject.toString());
+		log.info(responseObject.toString());
 
-		return BookController.createBookFromResponse(responseObject);
+		Book result = createBookFromResponse(responseObject);
+		result.setAuthors(createAuthorsFromResponse(responseObject));
+		
+		return result; 
 	}
 
+	private List<Author> createAuthorsFromResponse(ResponseIsdnDb responseObject) {
+		List<Author> authors = new ArrayList<>();
+		log.info(authorController.toString());
+		for (AuthorData authorData : responseObject.getData().get(0).getAuthorData()) {
+			log.info(authorData.toString());
+			log.info(authorData.getName());
+			
+			Author author = authorController.createAuthorObject(authorData.getName());
+			authors.add(author);
+		}
+		return authors;
+	}
+
+	
+	/**
+	 * Creates a new {@link Book}-Object but copies only the necessary fields.
+	 * 
+	 * @param responseObject
+	 */
+	private Book createBookFromResponse(ResponseIsdnDb responseObject) {
+		BookData bookData = responseObject.getData().get(0);
+
+		String name = bookData.getTitle();
+		String isbn = bookData.getIsbn13();
+
+		Book b = new Book(name, isbn);
+		b.setName(name);
+		b.setIsbn(isbn);
+		return b;
+	}
+	
 	/**
 	 * Add the {@link MediaType#APPLICATION_OCTET_STREAM} to the supported types
 	 * of the {@link MappingJackson2HttpMessageConverter}, because the isdndb
@@ -61,7 +111,7 @@ public class IsbndbDataProvider implements BookDataProvider {
 	 * 
 	 * @return modified {@link RestTemplate} for the isdndb website.
 	 */
-	private RestTemplate getIsdndbRestTemplate() {
+	private RestTemplate getIsbndbRestTemplate() {
 		RestTemplate restTemplate = new RestTemplate();
 		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
 		converter.setSupportedMediaTypes(

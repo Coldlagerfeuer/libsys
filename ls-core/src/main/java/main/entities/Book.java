@@ -3,12 +3,14 @@ package main.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 /**
@@ -18,7 +20,8 @@ import javax.persistence.OneToMany;
 public class Book {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="book_id")
 	private long bookId;
 
 	private String name;
@@ -26,16 +29,20 @@ public class Book {
 	@Lob // for longer texts like description
 	private String description;
 
-	@OneToMany
-	@JoinColumn(name="authorId")
+	@ManyToMany
+	@JoinColumn(name = "author_id")
 	private List<Author> authors;
 
 	private String publisher;
-	
-	private long ISBN;
 
-	
-	
+	private String isbn;
+
+	private int visibility = 0;
+
+	@OneToMany
+	@JoinColumn(name = "tag_id")
+	private List<Tag> tags;
+
 	protected Book() {
 	}
 
@@ -44,12 +51,22 @@ public class Book {
 	 * @param author
 	 * @param iSBN
 	 */
-	public Book(String name, Author author, long iSBN) {
+	public Book(String name, Author author, String isbn) {
 		super();
 		this.name = name;
 		this.authors = new ArrayList<>();
 		this.authors.add(author);
-		ISBN = iSBN;
+		this.isbn = isbn;
+	}
+
+	/**
+	 * @param name
+	 * @param isbn
+	 */
+	public Book(String name, String isbn) {
+		super();
+		this.name = name;
+		this.isbn = isbn;
 	}
 
 	/**
@@ -104,27 +121,27 @@ public class Book {
 		return authors;
 	}
 
-
 	/**
-	 * @param authors the authors to set
+	 * @param authors
+	 *            the authors to set
 	 */
 	public void setAuthors(List<Author> authors) {
 		this.authors = authors;
 	}
 
 	/**
-	 * @return the iSBN
+	 * @return the isbn
 	 */
-	public long getISBN() {
-		return ISBN;
+	public String getIsbn() {
+		return isbn;
 	}
 
 	/**
-	 * @param iSBN
-	 *            the iSBN to set
+	 * @param isbn
+	 *            the isbn to set
 	 */
-	public void setISBN(long iSBN) {
-		ISBN = iSBN;
+	public void setIsbn(String isbn) {
+		this.isbn = isbn;
 	}
 
 	/**
@@ -135,10 +152,41 @@ public class Book {
 	}
 
 	/**
-	 * @param publisher the publisher to set
+	 * @param publisher
+	 *            the publisher to set
 	 */
 	public void setPublisher(String publisher) {
 		this.publisher = publisher;
+	}
+
+	/**
+	 * @return the visibility
+	 */
+	public int getVisibility() {
+		return visibility;
+	}
+
+	/**
+	 * @param visibility
+	 *            the visibility to set
+	 */
+	public void setVisibility(int visibility) {
+		this.visibility = visibility;
+	}
+
+	/**
+	 * @return the tags
+	 */
+	public List<Tag> getTags() {
+		return tags;
+	}
+
+	/**
+	 * @param tags
+	 *            the tags to set
+	 */
+	public void setTags(List<Tag> tags) {
+		this.tags = tags;
 	}
 
 }

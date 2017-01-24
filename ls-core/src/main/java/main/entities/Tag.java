@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package main.entities;
 
 import javax.persistence.Column;
@@ -11,31 +14,24 @@ import javax.persistence.Id;
  *
  */
 @Entity
-public class Author {
+public class Tag {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "author_id")
-	private long authorId;
-
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name="tag_id")
+	private long tagId;
+	
 	private String name;
 
-	protected Author() {
+	protected Tag() {
 	}
-
+	
 	/**
 	 * @param name
 	 */
-	public Author(String name) {
+	public Tag(String name) {
 		super();
 		this.name = name;
-	}
-
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return authorId;
 	}
 
 	/**
@@ -46,11 +42,20 @@ public class Author {
 	}
 
 	/**
-	 * @param name
-	 *            the name to set
+	 * @param name the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * @return the id
+	 */
+	public long getId() {
+		return tagId;
+	}
+	
+	
+	
+	
 }
