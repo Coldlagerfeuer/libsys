@@ -1,19 +1,22 @@
+/**
+ * 
+ */
 package main.repository;
 
 import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import main.entities.Author;
+import main.entities.Tag;
 
 /**
  * @author n.frantzen <nils.frantzen@rwth-aachen.de>
  *
  */
-public interface AuthorRepository extends CrudRepository<Author, Long> {
-
-	List<Author> findByNameLike(String name);
+public interface TagRepository extends CrudRepository<Tag, Long> {
 	
-	List<Author> findByName(String name);
+	List<Tag> findByName(String name);
+	
+	List<Tag> findByTagId(Long id);
 
 }

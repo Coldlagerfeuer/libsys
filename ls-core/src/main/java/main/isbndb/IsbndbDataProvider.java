@@ -67,6 +67,10 @@ public class IsbndbDataProvider implements BookDataProvider {
 				ResponseIsdnDb.class);
 		log.info(responseObject.toString());
 
+		if (responseObject.getData() == null) {
+			return null;
+		}
+		
 		Book result = createBookFromResponse(responseObject);
 		result.setAuthors(createAuthorsFromResponse(responseObject));
 		
@@ -75,11 +79,9 @@ public class IsbndbDataProvider implements BookDataProvider {
 
 	private List<Author> createAuthorsFromResponse(ResponseIsdnDb responseObject) {
 		List<Author> authors = new ArrayList<>();
-		log.info(authorController.toString());
 		for (AuthorData authorData : responseObject.getData().get(0).getAuthorData()) {
 			log.info(authorData.toString());
-			log.info(authorData.getName());
-			
+
 			Author author = authorController.createAuthorObject(authorData.getName());
 			authors.add(author);
 		}
@@ -95,12 +97,8 @@ public class IsbndbDataProvider implements BookDataProvider {
 	private Book createBookFromResponse(ResponseIsdnDb responseObject) {
 		BookData bookData = responseObject.getData().get(0);
 
-		String name = bookData.getTitle();
-		String isbn = bookData.getIsbn13();
-
-		Book b = new Book(name, isbn);
-		b.setName(name);
-		b.setIsbn(isbn);
+		Book b = new Book(bookData.getTitle(), bookData.getIsbn13());
+		b.setDescription(bookData.getSummary());
 		return b;
 	}
 	

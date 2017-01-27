@@ -38,7 +38,10 @@
 <!-- Custom Theme JavaScript -->
 <script src="../dist/js/sb-admin-2.js"></script>
 
+<style type="text/css">
 
+
+</style>
 
 </head>
 
@@ -52,13 +55,19 @@
 
 
 		<div id="page-wrapper">
-			<div class="row">
-				<div class="col-lg-11">
-					<h1 id="book-title" class="page-header">BLANK</h1>
+			<div class="row" >
+				<div id="alert-div" class="col-lg-10">
+					<h1 id="book-title" class="page-header " contenteditable="false">Enter title</h1>
+				
 				</div>
-				<div class="col-lg-1">
+				<div class="col-lg-2">
 					<h1>
-						<button type="button" class="btn btn-default btn-circle btn-xl">
+						<button id="btn-save" type="button"
+							class="hidden btn btn-success btn-circle btn-xl pull-center">
+							<i class="fa fa-check"></i>
+						</button>
+						<button id="btn-edit" type="button"
+							class="btn btn-default btn-circle btn-xl pull-right">
 							<i class="fa fa-cog"></i>
 						</button>
 					</h1>
@@ -68,7 +77,20 @@
 			<!-- /.row -->
 
 			<div class="row">
-				<div class="col-md-2">
+				<div class="col-md-3 " >
+					<span class="lead">Category: </span>
+					<span id="book-category" class="text-muted"></span>
+					<select id="book-category-select" class="selectpicker form-control" data-live-search="true">
+						<!-- Filled by JS -->
+					</select>
+				</div>
+				<div class=col-md-9>
+					<small id="book-tags"></small>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-3">
 					<div class="row">
 						<div class="col-md-12">
 							<!-- COVER -->
@@ -79,7 +101,7 @@
 					<div class="row">
 						<div class="col-md-12">
 							<!-- AUTHOR -->
-							<p id="book-author" class="text-muted">--AUTHOR--</p>
+							<p id="book-author" class="text-muted">Enter Authors</p>
 						</div>
 					</div>
 					<div class="row">
@@ -92,8 +114,7 @@
 				</div>
 				<div class="col-md-9">
 					<p id="book-description">
-						<!-- Text -->
-						Lorem ipsum ....
+						No description available
 					</p>
 				</div>
 			</div>
@@ -115,13 +136,23 @@
 	<script src="../vendor/metisMenu/metisMenu.min.js"></script>
 
 	<script type="text/javascript">
+		var book;	
+	
 		$(document).ready(function() {
+			// Fill Categories
+			$.ajax({
+				url: serverUrl + "categories/getAllCategories"
+			}).then(function(data) {
+				for (category of data) {
+					$("#book-category-select").append('<option value="' + category.name + '">' + category.name + '</option>');
+				}
+			});
+			
 			var bookname = getQueryVariable("name");
 			var isbn = getQueryVariable("isbn");
 			console.log("book: " + bookname);
 			console.log("isbn: " + isbn);
-			if (name != null || isbn != null) {
-				var book = null;
+			if (bookname != null || isbn != null) {
 				var url = null;
 				if (bookname != null) {
 					url = serverUrl + "books/getByName?name=" + bookname;
@@ -132,30 +163,171 @@
 				$.ajax({
 					url: url
 				}).then(function(data) {
-					console.log(data);
-					console.log(data);
 					if (data != null) {
-						$("#book-title").text(data.name);
-						$("#book-author").text("");
-						console.log(data.authors);
-						for ( var i in data.authors) {
-							var author = data.authors[i];
-							console.log(author);
-							console.log(author.name);
-							$("#book-author").append(author.name + "</br>");
-						}
-						/* $("#book-author").text(data.author); */
-						$("#book-description").text(data.description);
-						var imageurl = "http://covers.openlibrary.org/b/isbn/" + book-isbn + ".jpg"
-						 $("#book-image").attr("src", imageurl); 
+						book = JSON.parse(JSON.stringify(data)); // simple workaround for clone
+						setBookFields(book);
+						
+						var imageurl = "http://covers.openlibrary.org/b/isbn/" + data.isbn + ".jpg";
+						imageurl = serverUrl + "books/getImageForIsbn?isbn=" + isbn;
+						console.log("imageURL: " + imageurl);
+						$("#book-image").attr("src", imageurl);
 						
 					} else {
-						// TODO
 						console.log("No or multiple books found");
 					}
 				});
+			} else {
+				// Create new book
+				$("#btn-edit").click();
+			}
+			
+			
+		}); // End document ready
+		
+		$("#book-category-select").change(function() {
+			$("#book-category").text($(this).val());
+		});
+		
+		$(document).on('click', '#btn-edit', function() {
+			if (toggleEditDesignClasses() == false) {
+				// Revert input
+				setBookFields(book);
 			}
 		});
+		
+		$(document).on('click', '#btn-save', function() {
+			console.log(book);
+			if (book != null) {
+				toggleEditDesignClasses();
+				
+				book.title = $("#book-title").text();
+				book.description = $("#book-description").text();
+				var authorsSplit = $("#book-author").html().split("<br>");
+				book.authors = [];
+				for (var i in authorsSplit) {
+					author = authorsSplit[i];
+					if (author != "") {
+						book.authors.push(author);
+					}
+				}
+				book.category.name = $("#book-category").text();
+				
+				
+				
+				console.log($("#book-author").text());
+				console.log(book.authors);
+				
+				$.ajax({
+					headers : {
+					    'Accept' : 'application/json',
+					    'Content-Type' : 'application/json'
+					},
+					type : 'POST',
+					data : JSON.stringify(book),
+					dataType : 'json',
+					url: serverUrl + "books/update",
+					success: function(data) {
+						if (data == true) {
+							console.log("update succesful");
+							$("#alert-div").append(getSuccessAlertText("Successfully updated book in database."));
+							setTimeout(function() {
+							    $('.alert').fadeOut('slow');
+							    }, 3000);
+						} else {
+							console.log("update failed, save new book");
+							saveNewBook(book);
+						}
+					},
+					error: function(e) {
+						console.log(e);
+					}
+				});
+			} else {
+				console.log("No saved book found");
+			}
+		});
+
+		function saveNewBook(book) {
+			$.ajax({
+				headers : {
+				    'Accept' : 'application/json',
+				    'Content-Type' : 'application/json'
+				},
+				type : 'POST',
+				data : JSON.stringify(book),
+				dataType : 'json',
+				url: serverUrl + "books/saveNewBook",
+				success: function(data) {
+					console.log("Successfully saved book in database.");
+					$("#alert-div").append(getSuccessAlertText("Successfully saved book in database."));
+					setTimeout(function() {
+						$("#success-alert").dismiss();
+						}, 2000);
+				}
+			});
+		}
+		
+		function getSuccessAlertText(text) {
+			return '<div id="success-alert" class="alert alert-success alert-dismissable fade in">'
+            + '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'
+            + '<strong>Success!</strong> ' + text + '</div>';
+		}
+		
+		function toggleEditDesignClasses() {
+			$("#btn-save").toggleClass("hidden");
+			var editable = !$("#btn-save").hasClass("hidden"); 			
+			$("#book-title").attr("contenteditable", editable);
+			$("#book-description").attr("contenteditable", editable);
+			$("#book-author").attr("contenteditable", editable);
+			$("#book-tags").attr("contenteditable", editable);
+						
+			if (editable) {
+				$("#book-title").addClass("well well-sm");
+				$("#book-description").addClass("well well-sm");
+				$("#book-author").addClass("well well-sm");
+				$("#book-tags").addClass("well well-sm form-control");
+			} else {
+				// Remove design
+				$("#book-title").removeClass("well well-sm");
+				$("#book-description").removeClass("well well-sm");
+				$("#book-author").removeClass("well well-sm");
+				$("#book-tags").removeClass("well well-sm form-control");
+			}
+			return editable;
+		}
+		
+		function setBookFields(book) {
+			console.log("Setting book fields");
+			console.log(book);
+			$("#book-title").text(book.name);
+			var description = (book.description == "") ? "No description available" : book.description;
+			$("#book-description").text(description);
+			$("#book-author").html(getAuthorString(book.authors));
+			console.log("CATEGORY: " + book.category.name);
+			$("#book-category").html('<a href=list-books.html?category=' + book.category.name +'>' + book.category.name + '</a>');
+			$("#book-category-select").val(book.category.name);			
+			book.tags = ["tag1", "tag2", "tag3"];
+			var tagString = "";
+			for(var i in book.tags) {
+				var tag = book.tags[i];
+				tagString +=  '<a href=list-books.html?tag=' + tag +'>' + tag + '</a>, ' ;
+			}
+			// Remove the last comma
+			$("#book-tags").html(tagString.substring(0, tagString.length - 3));
+		}
+
+		function getAuthorString(authors) {
+			var result = "";
+			for (var i in authors) {
+				var author = authors[i];
+				console.log(author);
+				result = result + author.name + "<br>";
+			}
+			console.log(result);
+			return result;
+		}
+
+		
 	</script>
 
 

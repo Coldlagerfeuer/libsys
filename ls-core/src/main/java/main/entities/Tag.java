@@ -1,6 +1,3 @@
-/**
- * 
- */
 package main.entities;
 
 import javax.persistence.Column;
@@ -8,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * @author n.frantzen <nils.frantzen@rwth-aachen.de>
@@ -55,6 +54,10 @@ public class Tag {
 		return tagId;
 	}
 	
+	@Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
 	
 	
 	

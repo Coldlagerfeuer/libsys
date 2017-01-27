@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import main.entities.Book;
-import main.isbndb.IsbndbDataProvider;
 
 /**
  * @author n.frantzen <nils.frantzen@rwth-aachen.de>

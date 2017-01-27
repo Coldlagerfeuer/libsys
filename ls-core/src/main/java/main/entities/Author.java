@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 /**
  * @author n.frantzen <nils.frantzen@rwth-aachen.de>
  *
@@ -53,4 +55,9 @@ public class Author {
 		this.name = name;
 	}
 
+	@Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
+	
 }

@@ -1,6 +1,7 @@
 package main.entities;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -11,7 +12,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * @author n.frantzen <nils.frantzen@rwth-aachen.de>
@@ -39,9 +43,13 @@ public class Book {
 
 	private int visibility = 0;
 
+	@ManyToOne
+	@JoinColumn(name = "category_id")
+	private Category category = new Category();
+	
 	@OneToMany
 	@JoinColumn(name = "tag_id")
-	private List<Tag> tags;
+	private List<Tag> tags = Collections.emptyList();
 
 	protected Book() {
 	}
@@ -188,5 +196,24 @@ public class Book {
 	public void setTags(List<Tag> tags) {
 		this.tags = tags;
 	}
+ 
+    /**
+	 * @return the category
+	 */
+	public Category getCategory() {
+		return category;
+	}
 
+	/**
+	 * @param category the category to set
+	 */
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
+	@Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
+	
 }

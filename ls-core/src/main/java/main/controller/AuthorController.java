@@ -32,7 +32,6 @@ public class AuthorController {
 			name = tmp[1].trim() + " " + tmp[0].trim();
 		}
 		
-		
 		List<Author> results = repo.findByNameLike(name);
 		if (results.size() == 0) {
 			log.info(String.format("Author \"%s\" not found, create new one", name));
@@ -40,11 +39,28 @@ public class AuthorController {
 			repo.save(entity);
 			return entity;
 		} else if (results.size() == 1) {
-			log.debug(String.format("Author \"%s\" found in d+b", name));
+			log.debug(String.format("Author \"%s\" found in db", name));
 		} else {
 			log.warn(String.format("Multiple author for name \"%s\" found, return first entry", name));
 		}
 		return results.get(0);
+	}
+
+	/**
+	 * @param authors
+	 */
+	public List<Author> saveAuthors(List<Author> authors) {
+		for (int i = 0; i < authors.size(); i++) {
+			Author author = authors.get(i);
+			Author repoResult = repo.findByName(author.getName()).get(0);
+			if (repoResult == null) {
+				repo.save(author);
+			} else {
+				authors.set(i, repoResult); // So that the id is correct
+			}
+		}
+		return authors;
+		
 	}
 	
 }
