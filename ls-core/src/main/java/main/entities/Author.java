@@ -16,7 +16,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class Author {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "author_id")
 	private long authorId;
 

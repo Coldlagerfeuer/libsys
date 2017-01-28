@@ -50,24 +50,32 @@ public class Application {
 			if (bookController.getBookCount() == 0) {
 				//@formatter:off
 				log.info("No saved books found, use demo books. Spiegel Bestsellerliste Nr. 51/2016 Belletristik");
+				
+				categoryController.saveCategory(new Category("Unknown"));
+				categoryController.saveCategory(new Category("Math"));
+				categoryController.saveCategory(new Category("Programming"));
+
+				authorController.createAuthorObject("Rowling, J.K.");
+				authorController.createAuthorObject("Fitzek, Sebastian");
+				authorController.createAuthorObject("Ferrante, Elena");
+				authorController.createAuthorObject("Neuhaus, Nele");
+				authorController.createAuthorObject("Beckett, Simon");
+				
+				
 				bookController
 						.saveNewBook(new Book("Harry Potter und das verwunschene Kind", authorController.createAuthorObject("Rowling, J.K."), "9783551559005"));
 				bookController.saveNewBook(new Book("Das Paket", authorController.createAuthorObject("Fitzek, Sebastian"), "9783426199206"));
 				bookController.saveNewBook(new Book("Meine geniale Freundin", authorController.createAuthorObject("Ferrante, Elena"), "9783518425534"));
 				bookController.saveNewBook(new Book("Im Wald", authorController.createAuthorObject("Neuhaus, Nele"), "9783550080555"));
 				bookController.saveNewBook(new Book("Totenfang", authorController.createAuthorObject("Beckett, Simon"), "9783805250016"));
-				bookController.saveNewBook(new Book("Raumpatrouille", authorController.createAuthorObject("Brandt, Matthias"), "9783462045673"));
-				bookController.saveNewBook(new Book("Die Entscheidung", authorController.createAuthorObject("Link, Charlotte"), "9783764504410"));
-				bookController.saveNewBook(new Book("Himmelhorn", authorController.createAuthorObject("Klüpfel, Volker; Kobr, Michael"), "9783426199398"));
-				bookController.saveNewBook(new Book("Konklave", authorController.createAuthorObject("Harris, Robert"), "9783453270725"));
-				bookController.saveNewBook(new Book("Cox", authorController.createAuthorObject("Ransmayr, Christoph"), "9783100829511"));
+//				bookController.saveNewBook(new Book("Raumpatrouille", authorController.createAuthorObject("Brandt, Matthias"), "9783462045673"));
+//				bookController.saveNewBook(new Book("Die Entscheidung", authorController.createAuthorObject("Link, Charlotte"), "9783764504410"));
+//				bookController.saveNewBook(new Book("Himmelhorn", authorController.createAuthorObject("Klüpfel, Volker; Kobr, Michael"), "9783426199398"));
+//				bookController.saveNewBook(new Book("Konklave", authorController.createAuthorObject("Harris, Robert"), "9783453270725"));
+//				bookController.saveNewBook(new Book("Cox", authorController.createAuthorObject("Ransmayr, Christoph"), "9783100829511"));
 				//@formatter:on
 
 				// 9780596007126 -> Head First Design Patterns
-
-				categoryController.saveCategory(new Category("Unknown"));
-				categoryController.saveCategory(new Category("Math"));
-				categoryController.saveCategory(new Category("Programming"));
 			}
 		};
 	}

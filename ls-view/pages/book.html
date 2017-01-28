@@ -261,8 +261,8 @@
 					console.log("Successfully saved book in database.");
 					$("#alert-div").append(getSuccessAlertText("Successfully saved book in database."));
 					setTimeout(function() {
-						$("#success-alert").dismiss();
-						}, 2000);
+					    $('.alert').fadeOut('slow');
+					    }, 3000);
 				}
 			});
 		}

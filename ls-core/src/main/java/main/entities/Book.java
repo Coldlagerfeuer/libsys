@@ -3,9 +3,11 @@ package main.entities;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,9 +15,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 /**
  * @author n.frantzen <nils.frantzen@rwth-aachen.de>
@@ -24,7 +27,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class Book {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="book_id")
 	private long bookId;
 
@@ -33,7 +36,7 @@ public class Book {
 	@Lob // for longer texts like description
 	private String description;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinColumn(name = "author_id")
 	private List<Author> authors;
 
@@ -47,9 +50,10 @@ public class Book {
 	@JoinColumn(name = "category_id")
 	private Category category = new Category();
 	
-	@OneToMany
+	@ManyToMany(fetch = FetchType.EAGER)
+	@Fetch(value = FetchMode.SUBSELECT)
 	@JoinColumn(name = "tag_id")
-	private List<Tag> tags = Collections.emptyList();
+	private Set<Tag> tags = Collections.emptySet();
 
 	protected Book() {
 	}
@@ -185,7 +189,7 @@ public class Book {
 	/**
 	 * @return the tags
 	 */
-	public List<Tag> getTags() {
+	public Set<Tag> getTags() {
 		return tags;
 	}
 
@@ -193,7 +197,7 @@ public class Book {
 	 * @param tags
 	 *            the tags to set
 	 */
-	public void setTags(List<Tag> tags) {
+	public void setTags(Set<Tag> tags) {
 		this.tags = tags;
 	}
  

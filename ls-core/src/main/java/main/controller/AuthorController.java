@@ -36,8 +36,7 @@ public class AuthorController {
 		if (results.size() == 0) {
 			log.info(String.format("Author \"%s\" not found, create new one", name));
 			Author entity = new Author(name);
-			repo.save(entity);
-			return entity;
+			return repo.save(entity);
 		} else if (results.size() == 1) {
 			log.debug(String.format("Author \"%s\" found in db", name));
 		} else {

@@ -1,7 +1,8 @@
 package main.controller;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +38,7 @@ public class CategoryController {
 	}
 
 	public Category saveCategory(Category category) {
+		log.info("Save new category: " + category.getName());
 		List<Category> dbresult = categoryRepository.findByName(category.getName());
 		if (dbresult.size() == 0) {
 			return categoryRepository.save(category);
@@ -54,13 +56,13 @@ public class CategoryController {
 	}
 
 	/**
-	 * @param tags
+	 * @param set
 	 * @return the saved or updated {@link Tag}s which should be saved in the
 	 *         main object
 	 */
-	public List<Tag> saveTags(List<Tag> tags) {
-		List<Tag> result = new ArrayList<>();
-		for (Tag tag : tags) {
+	public Set<Tag> saveTags(Set<Tag> set) {
+		Set<Tag> result = new HashSet<>();
+		for (Tag tag : set) {
 			result.add(saveTag(tag));
 		}
 		return result;

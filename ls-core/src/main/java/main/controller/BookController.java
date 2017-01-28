@@ -20,8 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -125,10 +123,10 @@ public class BookController {
 	public boolean updateBook(@RequestBody Book book) {
 		log.info("update Book");
 		log.info(book.toString());
-		if (bookRepository.exists(book.getId())) {
-			saveBook(book);
-			return true;
-		}
+//		if (bookRepository.exists(book.getId())) {
+//			saveBook(book);
+//			return true;
+//		}
 		return false;
 	}
 
@@ -149,7 +147,6 @@ public class BookController {
 		return bookRepository.count();
 	}
 
-	@Transactional(isolation = Isolation.SERIALIZABLE)
 	private void saveBook(Book book) {
 		log.info("Received book for Saving");
 		log.info(book.toString());
@@ -157,6 +154,16 @@ public class BookController {
 		book.setAuthors(authorController.saveAuthors(book.getAuthors()));
 		book.setTags(categoryController.saveTags(book.getTags()));
 		log.info(book.toString());
+		log.info("ALL books");
+		for (Book tmpBook : bookRepository.findAll()) {
+			log.info(tmpBook.toString());
+		}
+		
+		// Testweise alle anderen entities auf null setzen
+//		book.setAuthors(null);
+//		book.setCategory(null);
+//		book.setTags(null);
+		
 		bookRepository.save(book);
 	}
 
