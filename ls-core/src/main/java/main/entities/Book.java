@@ -45,6 +45,8 @@ public class Book {
 	private String isbn;
 
 	private int visibility = 0;
+	
+	private int year;
 
 	@ManyToOne
 	@JoinColumn(name = "category_id")
@@ -213,6 +215,20 @@ public class Book {
 	 */
 	public void setCategory(Category category) {
 		this.category = category;
+	}
+
+	/**
+	 * @return the year
+	 */
+	public int getYear() {
+		return year;
+	}
+
+	/**
+	 * @param year the year to set
+	 */
+	public void setYear(int year) {
+		this.year = year;
 	}
 
 	@Override

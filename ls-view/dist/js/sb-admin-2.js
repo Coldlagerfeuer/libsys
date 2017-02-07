@@ -1,5 +1,7 @@
 
-	var serverUrl = "http://localhost:9000/"
+//var serverUrl = "http://localhost:9000/"
+var serverUrl = "http://" + location.host + ":9000/";
+
 
 //Loads the correct sidebar on window load,
 //collapses the sidebar on window resize.
@@ -107,6 +109,21 @@ function search(searchText) {
 //	    window.location.href = url;
 	});
 }
+
+// Attribute name from every object in array
+function getNameStringFromArray(authors, placeholder) {
+	var result = "";
+	for (var i in authors) {
+		var author = authors[i];
+		console.log(author);
+		result = result + author.name + placeholder;
+	}
+	console.log(result);
+	result = result.substring(0, result.length - placeholder.length);
+	console.log(result);
+	return result;
+}
+
 
 String.prototype.replaceAll = function(search, replace){
     //if replace is null, return original string otherwise it will

@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import main.entities.Author;
 import main.entities.Book;
 import main.repository.BookRepository;
 
@@ -103,6 +104,11 @@ public class BookController {
 				URL url = new URL(String.format(uriTemplate, isbn));
 				BufferedImage image = ImageIO.read(url);
 
+				if (image.getHeight() <= 1 || image.getWidth() <= 1) {
+					log.info("Could not find image for isbn: " + isbn);
+					return null;
+				}
+				
 				File outputfile = new File(pathname);
 				ImageIO.write(image, "jpg", outputfile);
 			}
@@ -119,14 +125,63 @@ public class BookController {
 		return null;
 	}
 
+	@RequestMapping(value = "/getBibtexForBook", method = RequestMethod.GET)
+	public String getBibtexForBook(@RequestParam(value = "isbn") String isbn) {
+		log.info("create bibtex for isbn: " + isbn);
+		Book book = bookRepository.findByIsbnLike(isbn).get(0);
+		String fieldCheck = checkNecessaryField(book);
+		if (fieldCheck.isEmpty()) {
+			String result = "@BOOK{<br>"
+					+ "AUTHOR=\"";
+			for (Author author : book.getAuthors()) {
+				result += author.getName() + " and ";
+			}
+			result.substring(0, result.length() - 5); // remove last and
+			result += "\",<br>TITLE=\"" + book.getName()
+				+ "\",<br>PUBLISHER=\"" + book.getPublisher()
+				+ "\",<br>YEAR=\"" + book.getYear() + "\"";
+			
+			// Add additional Fields
+			// volume or number, series, address, edition, month, note, isbn
+			result += ",<br>ISBN:" + book.getIsbn();
+			
+			return result + "<br>}";
+		}
+		return fieldCheck;
+	}
+	
+	/**
+	 * @param book
+	 * @return String with missing Fields
+	 */
+	private String checkNecessaryField(Book book) {
+		String result = "";
+		if (book.getName() == null || book.getName().isEmpty()) {
+			result += " - NAME";
+		}
+		if (book.getAuthors() == null || book.getAuthors().isEmpty()) {
+			result += " - AUTHORS";
+		}
+		if (book.getCategory()== null || book.getCategory().getName() == null || book.getCategory().getName().isEmpty()) {
+			result += " - Category";
+		}
+		if (book.getPublisher() == null || book.getPublisher().isEmpty()) {
+			result += " - PUBLISHER";
+		}
+		if (book.getYear() == 0) {
+			result += " - YEAR";
+		}
+		return result;
+	}
+
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public boolean updateBook(@RequestBody Book book) {
 		log.info("update Book");
 		log.info(book.toString());
-//		if (bookRepository.exists(book.getId())) {
-//			saveBook(book);
-//			return true;
-//		}
+		if (bookRepository.exists(book.getId())) {
+			saveBook(book);
+			return true;
+		}
 		return false;
 	}
 
@@ -136,6 +191,16 @@ public class BookController {
 		return book.getId();
 	}
 
+	@RequestMapping(value = "/delete", method = RequestMethod.GET)
+	public boolean deleteBook(@RequestParam(value = "isbn") String isbn) {
+		Book book = bookRepository.findByIsbnLike(isbn).get(0);
+		if (book != null) {
+			bookRepository.delete(book);
+			return true;
+		}
+		return false;
+	}
+	
 	@RequestMapping(value = "/saveNewBook", method = RequestMethod.GET)
 	public long saveNewBook(@RequestParam(value = "isbn") String isbn) {
 		Book book = bookDataProviderController.searchBookInfos(isbn);
@@ -158,11 +223,6 @@ public class BookController {
 		for (Book tmpBook : bookRepository.findAll()) {
 			log.info(tmpBook.toString());
 		}
-		
-		// Testweise alle anderen entities auf null setzen
-//		book.setAuthors(null);
-//		book.setCategory(null);
-//		book.setTags(null);
 		
 		bookRepository.save(book);
 	}

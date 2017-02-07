@@ -56,15 +56,19 @@
 
 		<div id="page-wrapper">
 			<div class="row" >
-				<div id="alert-div" class="col-lg-10">
+				<div id="alert-div" class="col-lg-9">
 					<h1 id="book-title" class="page-header " contenteditable="false">Enter title</h1>
 				
 				</div>
-				<div class="col-lg-2">
+				<div class="col-lg-3">
 					<h1>
-						<button id="btn-save" type="button"
+						<button id="btn-save" type="button" data-toggle="tooltip" data-placement="top" title="Save Book"
 							class="hidden btn btn-success btn-circle btn-xl pull-center">
 							<i class="fa fa-check"></i>
+						</button>
+						<button id="btn-delete" type="button" data-toggle="tooltip" data-placement="top" title="Delete Book"
+							class="hidden btn btn-danger btn-circle btn-xl pull-center">
+							<i class="fa fa-times"></i>
 						</button>
 						<button id="btn-edit" type="button"
 							class="btn btn-default btn-circle btn-xl pull-right">
@@ -80,7 +84,7 @@
 				<div class="col-md-3 " >
 					<span class="lead">Category: </span>
 					<span id="book-category" class="text-muted"></span>
-					<select id="book-category-select" class="selectpicker form-control" data-live-search="true">
+					<select id="book-category-select" class="selectpicker form-control hidden" data-live-search="true">
 						<!-- Filled by JS -->
 					</select>
 				</div>
@@ -93,9 +97,14 @@
 				<div class="col-md-3">
 					<div class="row">
 						<div class="col-md-12">
-							<!-- COVER -->
-							<img id="book-image" src="../img/placeholder-book.jpg"
-								class="img-responsive" alt="No image available">
+						 	<div class="panel panel-default">
+						 		<div class="panel-body">
+									<!-- COVER -->
+									<img  src="../img/placeholder-book.jpg" class="img-responsive" 
+									alt="No image available" id="book-image"
+									onerror="if (this.src != '../img/placeholder-book.jpg') this.src = '../img/placeholder-book.jpg';">
+									</div>
+							</div>
 						</div>
 					</div>
 					<div class="row">
@@ -113,12 +122,69 @@
 					</div>
 				</div>
 				<div class="col-md-9">
-					<p id="book-description">
+				<div class="panel panel-default">
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-pills">
+                                <li class="active"><a href="#description-pills" data-toggle="tab">Description</a>
+                                </li>
+                                <li><a href="#bibtex-pills" data-toggle="tab">Bibtex</a>
+                                </li>
+                                <li><a href="#messages-pills" data-toggle="tab">Messages</a>
+                                </li>
+                                <li id="settings-pills-tab" class="hidden"><a href="#settings-pills" data-toggle="tab">Settings</a>
+                                </li>
+                            </ul>
+
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div class="tab-pane fade in active" id="description-pills">
+                                    <h4></h4>
+                                    <p id="book-description">No description available</p>
+                                </div>
+                                <div class="tab-pane fade" id="bibtex-pills">
+                                    <h4>Bibtex String</h4>
+                                    <p class="well" id="bibtex-entry" contenteditable="true">Could not generate bibtex entry</p>
+                                </div>
+                                <div class="tab-pane fade" id="messages-pills">
+                                    <h4>Messages Tab</h4>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                </div>
+                                <div class="tab-pane fade" id="settings-pills">
+                                    <h4>Settings Tab</h4>
+                                    <div class="row">
+                                    	<div class="col-md-2">
+                                    		<p class="text-right">Publisher:</p>
+                                    	</div>
+                                    	<div class="col-md-10">
+                                    		<input id="book-publisher" class="form-control">
+                                    	</div>
+                                    </div>
+                                    <h4></h4>
+                                    <div class="row">
+                                    	<div class="col-md-2">
+                                    		<p class="text-right">Year:</p>
+                                    	</div>
+                                    	<div class="col-md-10">
+                                    		<input id="book-year" class="form-control">
+                                    	</div>
+                                    </div> 
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+				
+					<!-- <p id="book-description">
 						No description available
-					</p>
+					</p> -->
 				</div>
 			</div>
 			<!-- /.row -->
+
+			<!-- Modal -->
+			<div id='modalPlaceholder'></div>
 
 		</div>
 		<!-- /#page-wrapper -->
@@ -137,15 +203,17 @@
 
 	<script type="text/javascript">
 		var book;	
+		var currentModalId;
 	
 		$(document).ready(function() {
 			// Fill Categories
 			$.ajax({
 				url: serverUrl + "categories/getAllCategories"
 			}).then(function(data) {
-				for (category of data) {
+ 				for (var categoryId in data) {
+ 					var category = data[categoryId];
 					$("#book-category-select").append('<option value="' + category.name + '">' + category.name + '</option>');
-				}
+				} 
 			});
 			
 			var bookname = getQueryVariable("name");
@@ -160,33 +228,98 @@
 					url = serverUrl + "books/getByIsbn?isbn=" + isbn;
 				}
 				console.log("url: " + url);
-				$.ajax({
-					url: url
-				}).then(function(data) {
-					if (data != null) {
-						book = JSON.parse(JSON.stringify(data)); // simple workaround for clone
-						setBookFields(book);
-						
-						var imageurl = "http://covers.openlibrary.org/b/isbn/" + data.isbn + ".jpg";
-						imageurl = serverUrl + "books/getImageForIsbn?isbn=" + isbn;
-						console.log("imageURL: " + imageurl);
-						$("#book-image").attr("src", imageurl);
-						
-					} else {
-						console.log("No or multiple books found");
-					}
-				});
+				updateSiteWithUrl(url);
 			} else {
 				// Create new book
 				$("#btn-edit").click();
+				// Enter ISBN to start
+				var modalId = "#modalIsbn"
+				$('#modalPlaceholder').load('dialogs.html '+ modalId, function() {
+					currentModalId = modalId;					
+				    $(modalId).modal('toggle');
+				});
+				
+				
 			}
 			
-			
 		}); // End document ready
+
+		function processModalInput() {
+		    $(currentModalId).modal('toggle');
+		     var url = serverUrl + "books/getByIsbn?isbn=" + $('#message-text').val();
+		     updateSiteWithUrl(url);
+		}
+		
+		function updateSiteWithUrl(url) {
+			$.ajax({
+				url: url
+			}).then(function(data) {
+				console.log("Ajax: " + data);
+				if (data != null) {
+					book = JSON.parse(JSON.stringify(data)); // simple workaround for clone
+					setBookFields(book);
+					
+					/* Search for image */
+					// var imageurl = "http://covers.openlibrary.org/b/isbn/" + data.isbn + ".jpg";
+					var imageurl = serverUrl + "books/getImageForIsbn?isbn=" + data.isbn;
+					console.log("imageURL: " + imageurl);
+					$("#book-image").attr("src", imageurl);
+					
+					// generate bibtex entry
+					generateBibtexEntry();
+					
+				} else {
+					console.log("No or multiple books found");
+				}
+			});
+		}
+		
+		function generateBibtexEntry() {
+			$.ajax({
+				url: serverUrl + "books/getBibtexForBook?isbn=" + book.isbn
+			}).then(function(data) {
+				console.log("bibtex string: " + data);
+				$('#bibtex-entry').html(data);
+			});
+		}
 		
 		$("#book-category-select").change(function() {
 			$("#book-category").text($(this).val());
 		});
+		
+		$(document).on('click', '#btn-delete', function() {
+			console.log("Open delete modal");
+			var modalId = "#modalDelete"
+			$('#modalPlaceholder').load('dialogs.html '+ modalId , function() {
+				currentModalId = modalId;
+				/* $("#modalBookName").html("Bookname: \"" + book.name + "\""); */
+			    $(modalId).modal('toggle');
+			});
+			
+		});
+		
+		function processModalDelete() {
+			$(currentModalId).modal('toggle');
+			console.log("process delete")
+			$.ajax({
+				url: serverUrl + "books/delete?isbn=" + book.isbn,
+				success: function (data) {
+					console.log("ajax delete success");
+					$("#alert-div").append(getSuccessAlertText("Successfully deleted book in database."));
+				},
+				error:function(e) {
+					console.log("ajax delete failed");
+					$("#alert-div").append(getErrorAlertText("Could not delete book."));
+				}
+			});
+		}
+		
+ 		$(document).on('focus', '#bibtex-entry', function(){
+			document.execCommand('selectAll');
+			document.execCommand("copy");
+			$("#bibtex-pills").append(getSuccessAlertText("Copied bibtex entry to clipboard"));
+			
+		}); 
 		
 		$(document).on('click', '#btn-edit', function() {
 			if (toggleEditDesignClasses() == false) {
@@ -201,7 +334,7 @@
 				toggleEditDesignClasses();
 				
 				book.title = $("#book-title").text();
-				book.description = $("#book-description").text();
+				book.description = $("#book-description").html();
 				var authorsSplit = $("#book-author").html().split("<br>");
 				book.authors = [];
 				for (var i in authorsSplit) {
@@ -211,8 +344,8 @@
 					}
 				}
 				book.category.name = $("#book-category").text();
-				
-				
+				book.publisher = $("#book-publisher").val();
+				book.year = $("#book-year").val();
 				
 				console.log($("#book-author").text());
 				console.log(book.authors);
@@ -230,9 +363,7 @@
 						if (data == true) {
 							console.log("update succesful");
 							$("#alert-div").append(getSuccessAlertText("Successfully updated book in database."));
-							setTimeout(function() {
-							    $('.alert').fadeOut('slow');
-							    }, 3000);
+							
 						} else {
 							console.log("update failed, save new book");
 							saveNewBook(book);
@@ -260,14 +391,22 @@
 				success: function(data) {
 					console.log("Successfully saved book in database.");
 					$("#alert-div").append(getSuccessAlertText("Successfully saved book in database."));
-					setTimeout(function() {
-					    $('.alert').fadeOut('slow');
-					    }, 3000);
 				}
 			});
 		}
+		function getErrorAlertText(text) {
+			setTimeout(function() {
+			    $('.alert').fadeOut('slow');
+			    }, 3000);
+			return '<div id="error-alert" class="alert alert-danger alert-dismissable fade in">'
+            + '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'
+            + '<strong>Error!</strong> ' + text + '</div>';
+		}
 		
 		function getSuccessAlertText(text) {
+			setTimeout(function() {
+			    $('.alert').fadeOut('slow');
+			    }, 3000);
 			return '<div id="success-alert" class="alert alert-success alert-dismissable fade in">'
             + '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'
             + '<strong>Success!</strong> ' + text + '</div>';
@@ -275,6 +414,11 @@
 		
 		function toggleEditDesignClasses() {
 			$("#btn-save").toggleClass("hidden");
+			$("#btn-delete").toggleClass("hidden");
+			$("#settings-pills-tab").toggleClass("hidden");
+			if ($("#settings-pills-tab").hasClass("active")) {
+				$('.nav-pills a[href="#description-pills"]').tab('show');
+			}
 			var editable = !$("#btn-save").hasClass("hidden"); 			
 			$("#book-title").attr("contenteditable", editable);
 			$("#book-description").attr("contenteditable", editable);
@@ -286,12 +430,14 @@
 				$("#book-description").addClass("well well-sm");
 				$("#book-author").addClass("well well-sm");
 				$("#book-tags").addClass("well well-sm form-control");
+				$("#book-category-select").removeClass("hidden");
 			} else {
 				// Remove design
 				$("#book-title").removeClass("well well-sm");
 				$("#book-description").removeClass("well well-sm");
 				$("#book-author").removeClass("well well-sm");
 				$("#book-tags").removeClass("well well-sm form-control");
+				$("#book-category-select").addClass("hidden");
 			}
 			return editable;
 		}
@@ -301,33 +447,25 @@
 			console.log(book);
 			$("#book-title").text(book.name);
 			var description = (book.description == "") ? "No description available" : book.description;
-			$("#book-description").text(description);
-			$("#book-author").html(getAuthorString(book.authors));
+			$("#book-description").html(description);
+			$("#book-author").html(getNameStringFromArray(book.authors, "<br>"));
 			console.log("CATEGORY: " + book.category.name);
 			$("#book-category").html('<a href=list-books.html?category=' + book.category.name +'>' + book.category.name + '</a>');
 			$("#book-category-select").val(book.category.name);			
-			book.tags = ["tag1", "tag2", "tag3"];
+			// book.tags = ["tag1", "tag2", "tag3"]; Example values 
 			var tagString = "";
 			for(var i in book.tags) {
 				var tag = book.tags[i];
-				tagString +=  '<a href=list-books.html?tag=' + tag +'>' + tag + '</a>, ' ;
+				tagString +=  '<a href=list-books.html?tag=' + tag.name +'>' + tag.name + '</a>, ' ;
 			}
 			// Remove the last comma
 			$("#book-tags").html(tagString.substring(0, tagString.length - 3));
+			
+			//Settings Tab
+			$("#book-publisher").val(book.publisher);
+			$("#book-year").val(book.year);
 		}
 
-		function getAuthorString(authors) {
-			var result = "";
-			for (var i in authors) {
-				var author = authors[i];
-				console.log(author);
-				result = result + author.name + "<br>";
-			}
-			console.log(result);
-			return result;
-		}
-
-		
 	</script>
 
 
