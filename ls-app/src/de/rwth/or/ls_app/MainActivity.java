@@ -40,38 +40,31 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
          * */
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
  
-            @Override
             public void onPageSelected(int position) {
                 // on changing the page
                 // make respected tab selected
                 actionBar.setSelectedNavigationItem(position);
             }
+
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void onPageScrollStateChanged(int state) {
+				// TODO Auto-generated method stub
+				
+			}
  
-            @Override
-            public void onPageScrolled(int arg0, float arg1, int arg2) {
-            }
- 
-            @Override
-            public void onPageScrollStateChanged(int arg0) {
-            }
         });
     }
  
-    @Override
-    public void onTabReselected(Tab tab, FragmentTransaction ft) {
-    }
- 
-    @Override
     public void onTabSelected(Tab tab, FragmentTransaction ft) {
         // on tab selected
         // show respected fragment view
         viewPager.setCurrentItem(tab.getPosition());
     }
  
-    @Override
-    public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-    }
-    
     @Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
     	
@@ -84,5 +77,23 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	    // system behavior (probably exit the activity)
 	    return super.onKeyDown(keyCode, event);
     }
+
+
+	/* (non-Javadoc)
+	 * @see android.app.ActionBar.TabListener#onTabReselected(android.app.ActionBar.Tab, android.app.FragmentTransaction)
+	 */
+	public void onTabReselected(Tab arg0, FragmentTransaction arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	/* (non-Javadoc)
+	 * @see android.app.ActionBar.TabListener#onTabUnselected(android.app.ActionBar.Tab, android.app.FragmentTransaction)
+	 */
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+		// TODO Auto-generated method stub
+		
+	}
  
 }
