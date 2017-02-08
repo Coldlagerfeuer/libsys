@@ -1,8 +1,10 @@
 package de.rwth.or.ls_app;
 
+
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -65,6 +67,16 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         viewPager.setCurrentItem(tab.getPosition());
     }
  
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+//        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+//        if (scanResult != null) {
+//            String re = scanResult.getContents();
+//            Log.d("code", re);
+//        }
+        // else continue with any other code you need in the method
+
+    }
+    
     @Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
     	

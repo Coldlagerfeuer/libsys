@@ -5,12 +5,36 @@
     android:orientation="vertical"
     android:background="#ff8400" >
      
-    <TextView android:layout_width="fill_parent"
+ <!--    <ImageView 
+	    android:id="@+id/qrCode"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_marginTop="50dp"
+	    android:layout_centerHorizontal="true"
+	    android:contentDescription="Desc"
+    /> -->
+    
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView android:text=""
+        android:layout_width="wrap_content" 
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Design Games Screen"
-        android:textSize="20dp"
-        android:layout_centerInParent="true"/>
+        android:id="@+id/txtContent"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Process"
+        android:id="@+id/button"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imgview"/>
+</LinearLayout>
      
  
 </RelativeLayout>
