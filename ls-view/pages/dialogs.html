@@ -1,70 +1,113 @@
 <!-- Modal - default -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="modalLabel">Modal title</h4>
-      </div>
-      <div class="modal-body">
-      	 <form>
-        	...
-         </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onClick="processModalInput();" >Save</button>
-      </div>
-    </div>
-  </div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+	aria-labelledby="modalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="modalLabel">Modal title</h4>
+			</div>
+			<div class="modal-body">
+				<form>...</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary"
+					onClick="processModalInput();">Save</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 
 <!-- Modal - ISBN -->
-<div class="modal fade" id="modalIsbn" tabindex="-1" role="dialog" aria-labelledby="modalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="modalLabel">Enter ISBN to start</h4>
-      </div>
-      <div class="modal-body">
-      	 <form>
-       	<div class="form-group">
-            <label for="message-text" class="control-label">ISBN:</label>
-            <textarea class="form-control" id="message-text"></textarea>
-          </div>
-         </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onClick="processModalInput();" >Search</button>
-      </div>
-    </div>
-  </div>
+<div class="modal fade" id="modalIsbn" tabindex="-1" role="dialog"
+	aria-labelledby="modalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="modalLabel">Enter ISBN to start</h4>
+			</div>
+			<div class="modal-body">
+				<form>
+					<div class="form-group">
+						<label for="message-text" class="control-label">ISBN:</label>
+						<textarea class="form-control" id="message-text"></textarea>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary"
+					onClick="processModalInput();">Search</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 <!-- Modal - Delete -->
-<div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="modalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="modalLabel">Confirm Delete</h4>
-      </div>
-      <div class="modal-body">
-      	 <form>
-       	<div class="form-group">
-			<p>You are about to delete one book, this procedure is irreversible.</p>
-			<p>Do you want to proceed?</p>
-			<p id="modalBookName"></p>
-          </div>
-         </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onClick="processModalDelete();" >Delete</button>
-      </div>
-    </div>
-  </div>
+<div class="modal fade" id="modalDelete" tabindex="-1" role="dialog"
+	aria-labelledby="modalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="modalLabel">Confirm Delete</h4>
+			</div>
+			<div class="modal-body">
+				<form>
+					<div class="form-group">
+						<p>You are about to delete one book, this procedure is
+							irreversible.</p>
+						<p>Do you want to proceed?</p>
+						<p id="modalBookName"></p>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary"
+					onClick="processModalDelete();">Delete</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal - location -->
+<div class="modal fade" id="modalLent" tabindex="-1" role="dialog"
+	aria-labelledby="modalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="modalLabel">Enter new Book location</h4>
+			</div>
+			<div class="modal-body">
+				<form>
+					<div class="form-group">
+						<label for="message-text" class="control-label">Location:</label>
+						<textarea class="form-control" id="message-text"></textarea>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary"
+					onClick="processModalLent();">Lent</button>
+			</div>
+		</div>
+	</div>
 </div>

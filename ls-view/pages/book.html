@@ -116,7 +116,7 @@
 					<div class="row">
 						<div class="col-md-12">
 							<!-- Lent button -->
-							<button id="book-btn-lent" type="button"
+							<button id="btn-book-lent" type="button"
 								class="btn btn-primary btn-lg btn-block">Lent book</button>
 						</div>
 					</div>
@@ -170,21 +170,37 @@
                                     		<input id="book-year" class="form-control">
                                     	</div>
                                     </div> 
+                                     <div class="row">
+                                    	<div class="col-md-2">
+                                    		<p class="text-right">Default Location:</p>
+                                    	</div>
+                                    	<div class="col-md-10">
+                                    		<input id="book-location-default" class="form-control">
+                                    	</div>
+                                    </div>
+                                    <div class="row">
+                                    	<div class="col-md-2">
+                                    		<p class="text-right">Location:</p>
+                                    	</div>
+                                    	<div class="col-md-10">
+                                    		<input id="book-location" class="form-control">
+                                    	</div>
+                                    </div>  
                                 </div>
                             </div>
                         </div>
                         <!-- /.panel-body -->
+                        
                     </div>
-				
-					<!-- <p id="book-description">
-						No description available
-					</p> -->
 				</div>
 			</div>
 			<!-- /.row -->
 
 			<!-- Modal -->
-			<div id='modalPlaceholder'></div>
+			<div class="row">
+				<div id='modalPlaceholder'></div>
+			</div>
+
 
 		</div>
 		<!-- /#page-wrapper -->
@@ -206,20 +222,25 @@
 		var currentModalId;
 	
 		$(document).ready(function() {
+
 			// Fill Categories
 			$.ajax({
-				url: serverUrl + "categories/getAllCategories"
-			}).then(function(data) {
- 				for (var categoryId in data) {
- 					var category = data[categoryId];
-					$("#book-category-select").append('<option value="' + category.name + '">' + category.name + '</option>');
-				} 
+				type: "GET",				
+				url: serverUrl + "categories/getAllCategories",
+				success:function(data) {
+					console.log("categorie success");
+	 				for (var categoryId in data) {
+	 					var category = data[categoryId];
+						$("#book-category-select").append('<option value="' + category.name + '">' + category.name + '</option>');
+					} 
+				},
+				error:function(e){
+					console.log("categorie error - " + e.statusText);
+				}
 			});
 			
 			var bookname = getQueryVariable("name");
 			var isbn = getQueryVariable("isbn");
-			console.log("book: " + bookname);
-			console.log("isbn: " + isbn);
 			if (bookname != null || isbn != null) {
 				var url = null;
 				if (bookname != null) {
@@ -227,7 +248,6 @@
 				} else {
 					url = serverUrl + "books/getByIsbn?isbn=" + isbn;
 				}
-				console.log("url: " + url);
 				updateSiteWithUrl(url);
 			} else {
 				// Create new book
@@ -262,7 +282,6 @@
 					/* Search for image */
 					// var imageurl = "http://covers.openlibrary.org/b/isbn/" + data.isbn + ".jpg";
 					var imageurl = serverUrl + "books/getImageForIsbn?isbn=" + data.isbn;
-					console.log("imageURL: " + imageurl);
 					$("#book-image").attr("src", imageurl);
 					
 					// generate bibtex entry
@@ -278,7 +297,6 @@
 			$.ajax({
 				url: serverUrl + "books/getBibtexForBook?isbn=" + book.isbn
 			}).then(function(data) {
-				console.log("bibtex string: " + data);
 				$('#bibtex-entry').html(data);
 			});
 		}
@@ -295,12 +313,11 @@
 				/* $("#modalBookName").html("Bookname: \"" + book.name + "\""); */
 			    $(modalId).modal('toggle');
 			});
-			
 		});
 		
 		function processModalDelete() {
-			$(currentModalId).modal('toggle');
 			console.log("process delete")
+			$(currentModalId).modal('toggle');
 			$.ajax({
 				url: serverUrl + "books/delete?isbn=" + book.isbn,
 				success: function (data) {
@@ -312,6 +329,57 @@
 					$("#alert-div").append(getErrorAlertText("Could not delete book."));
 				}
 			});
+		}
+
+		$(document).on('click', '#btn-book-lent', function() {
+			console.log("Lent book");
+			if (book.lent_location === '') {
+			
+			var modalId = "#modalLent"
+				$('#modalPlaceholder').load('dialogs.html '+ modalId , function() {
+					currentModalId = modalId;
+				    $(modalId).modal('toggle');
+				});
+			} else {
+				book.lentLocation = "";
+				saveBookToDB();
+				setBookFields(book);
+			}
+		});
+		
+		function processModalLent() {
+			console.log("process lent")
+			$(currentModalId).modal('toggle');
+			
+			var newLocation = $('#message-text').val();
+			
+			$.ajax({
+				url: serverUrl + "books/lentBook?isbn=" + book.isbn + "&location=" + newLocation,
+				success: function(data) {
+					if (data != null) {
+						book = data;
+						$("#alert-div").append(getSuccessAlertText("Successfully lent book. New location: " + newLocation));
+						setBookFields(book);
+					} else {
+						$("#alert-div").append(getErrorAlertText("Action failed"));
+					}
+				},
+				error: function(e) {
+					console.log(e);
+					$("#alert-div").append(getErrorAlertText("Action failed - " + e.statusText));
+				}
+			});
+		}
+		
+		function lentButtonAvailable(available) {
+			console.log("lentButtonAvailable");
+			console.log(available);
+			var btnRef = $("#btn-book-lent");
+			if (!available) {
+				btnRef.addClass("disabled");
+			} else {
+				btnRef.removeClass("disabled");
+			}
 		}
 		
  		$(document).on('focus', '#bibtex-entry', function(){
@@ -331,53 +399,59 @@
 		$(document).on('click', '#btn-save', function() {
 			console.log(book);
 			if (book != null) {
-				toggleEditDesignClasses();
-				
-				book.title = $("#book-title").text();
-				book.description = $("#book-description").html();
-				var authorsSplit = $("#book-author").html().split("<br>");
-				book.authors = [];
-				for (var i in authorsSplit) {
-					author = authorsSplit[i];
-					if (author != "") {
-						book.authors.push(author);
-					}
-				}
-				book.category.name = $("#book-category").text();
-				book.publisher = $("#book-publisher").val();
-				book.year = $("#book-year").val();
-				
-				console.log($("#book-author").text());
-				console.log(book.authors);
-				
-				$.ajax({
-					headers : {
-					    'Accept' : 'application/json',
-					    'Content-Type' : 'application/json'
-					},
-					type : 'POST',
-					data : JSON.stringify(book),
-					dataType : 'json',
-					url: serverUrl + "books/update",
-					success: function(data) {
-						if (data == true) {
-							console.log("update succesful");
-							$("#alert-div").append(getSuccessAlertText("Successfully updated book in database."));
-							
-						} else {
-							console.log("update failed, save new book");
-							saveNewBook(book);
-						}
-					},
-					error: function(e) {
-						console.log(e);
-					}
-				});
+				saveBookToDB();
 			} else {
 				console.log("No saved book found");
 			}
 		});
 
+		function saveBookToDB(){
+			toggleEditDesignClasses();
+			
+			book.title = $("#book-title").text();
+			book.description = $("#book-description").html();
+			var authorsSplit = $("#book-author").html().split("<br>");
+			book.authors = [];
+			for (var i in authorsSplit) {
+				author = authorsSplit[i];
+				if (author != "") {
+					book.authors.push(author);
+				}
+			}
+			book.category.name = $("#book-category").text();
+			book.publisher = $("#book-publisher").val();
+			book.year = $("#book-year").val();
+			book.default_location = $("#book-location-default").val();
+			book.lent_location = $("#book-location").val();
+			
+			console.log($("#book-author").text());
+			console.log(book.authors);
+			
+			$.ajax({
+				headers : {
+				    'Accept' : 'application/json',
+				    'Content-Type' : 'application/json'
+				},
+				type : 'POST',
+				data : JSON.stringify(book),
+				dataType : 'json',
+				url: serverUrl + "books/update",
+				success: function(data) {
+					if (data == true) {
+						console.log("update succesful");
+						$("#alert-div").append(getSuccessAlertText("Successfully updated book in database."));
+						
+					} else {
+						console.log("update failed, save new book");
+						saveNewBook(book);
+					}
+				},
+				error: function(e) {
+					console.log(e);
+				}
+			});
+		}
+		
 		function saveNewBook(book) {
 			$.ajax({
 				headers : {
@@ -449,7 +523,6 @@
 			var description = (book.description == "") ? "No description available" : book.description;
 			$("#book-description").html(description);
 			$("#book-author").html(getNameStringFromArray(book.authors, "<br>"));
-			console.log("CATEGORY: " + book.category.name);
 			$("#book-category").html('<a href=list-books.html?category=' + book.category.name +'>' + book.category.name + '</a>');
 			$("#book-category-select").val(book.category.name);			
 			// book.tags = ["tag1", "tag2", "tag3"]; Example values 
@@ -462,9 +535,15 @@
 			$("#book-tags").html(tagString.substring(0, tagString.length - 3));
 			
 			//Settings Tab
+			console.log("book.lent_location:" + book.lentLocation +", " );
+			console.log(book.lentLocation === "");
 			$("#book-publisher").val(book.publisher);
 			$("#book-year").val(book.year);
+			$("#book-location-default").val(book.defaultLocation);
+			$("#book-location").val(book.lentLocation);
+			lentButtonAvailable(book.lentLocation === "");
 		}
+		
 
 	</script>
 

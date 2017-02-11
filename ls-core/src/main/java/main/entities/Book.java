@@ -56,6 +56,10 @@ public class Book {
 	@Fetch(value = FetchMode.SUBSELECT)
 	@JoinColumn(name = "tag_id")
 	private Set<Tag> tags = Collections.emptySet();
+	
+	private String defaultLocation;
+	
+	private String lentLocation;
 
 	protected Book() {
 	}
@@ -229,6 +233,34 @@ public class Book {
 	 */
 	public void setYear(int year) {
 		this.year = year;
+	}
+
+	/**
+	 * @return the defaultLocation
+	 */
+	public String getDefaultLocation() {
+		return defaultLocation;
+	}
+
+	/**
+	 * @param defaultLocation the defaultLocation to set
+	 */
+	public void setDefaultLocation(String defaultLocation) {
+		this.defaultLocation = defaultLocation;
+	}
+
+	/**
+	 * @return the lentLocation
+	 */
+	public String getLentLocation() {
+		return lentLocation;
+	}
+
+	/**
+	 * @param lentLocation the lentLocation to set
+	 */
+	public void setLentLocation(String lentLocation) {
+		this.lentLocation = lentLocation;
 	}
 
 	@Override

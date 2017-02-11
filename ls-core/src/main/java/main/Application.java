@@ -7,6 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import main.controller.AccountController;
 import main.controller.AuthorController;
 import main.controller.BookController;
 import main.controller.CategoryController;
@@ -45,7 +46,7 @@ public class Application {
 
 	@Bean
 	public CommandLineRunner demoRules(final BookController bookController, final AuthorController authorController,
-			final CategoryController categoryController) {
+			final CategoryController categoryController, final AccountController accountController) {
 		return (args) -> {
 			if (bookController.getBookCount() == 0) {
 				//@formatter:off
@@ -76,6 +77,11 @@ public class Application {
 				//@formatter:on
 
 				// 9780596007126 -> Head First Design Patterns
+			}
+			
+			if (accountController.count() == 0) {
+				log.info("Create default User");
+				accountController.createNewUser("user", "password");
 			}
 		};
 	}

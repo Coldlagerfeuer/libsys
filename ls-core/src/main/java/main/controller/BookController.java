@@ -208,6 +208,17 @@ public class BookController {
 		return book.getId();
 	}
 
+	@RequestMapping(value = "/lentBook", method = RequestMethod.GET)
+	public Book lentBook(@RequestParam(value = "isbn") String isbn, @RequestParam(value = "location") String newLocation) {
+		log.info("lending book " + isbn);
+		Book book = bookRepository.findByIsbn(isbn);
+		if (book == null) {
+			return null;
+		} 
+		book.setLentLocation(newLocation);
+		return bookRepository.save(book);
+	}
+	
 	public long getBookCount() {
 		return bookRepository.count();
 	}

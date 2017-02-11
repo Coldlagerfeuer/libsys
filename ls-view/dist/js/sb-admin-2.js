@@ -1,6 +1,6 @@
 
 //var serverUrl = "http://localhost:9000/"
-var serverUrl = "http://" + location.host + ":9000/";
+var serverUrl = "http://" + location.host + ":8080/";
 
 
 //Loads the correct sidebar on window load,
