@@ -1,6 +1,8 @@
 
 package main.repository;
 
+import static org.junit.Assert.*;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +30,9 @@ public class IsbndbDataProviderTest {
 		Book book = bookDataProvider.getBookDataForIsbn(isbn);
 		System.out.println(book);
 
-		// TODO assert book = HFDP
-
+		assertEquals(isbn, book.getIsbn());
+		assertEquals("Head First Design Patterns", book.getName());
+		
 	}
 
 }

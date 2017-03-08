@@ -86,9 +86,6 @@ public class BookController {
 		} else {
 			result = dbResultList.get(0);
 		}
-		// TODO save new book in db, in comments to test the queries to isbndb
-		// and to modify the book class
-		// bookRepository.save(result);
 		return result;
 	}
 
@@ -125,27 +122,41 @@ public class BookController {
 		return null;
 	}
 
+	@RequestMapping(value = "/getLentBooks", method = RequestMethod.GET)
+	public List<Book> getLentBooks() {
+		return bookRepository.findByLentLocation("");
+	}
+	
+	@RequestMapping(value = "/getLentBookCount", method = RequestMethod.GET)
+	public int getLentBookCount() {
+		return bookRepository.findByLentLocation("").size();
+	}
+	
 	@RequestMapping(value = "/getBibtexForBook", method = RequestMethod.GET)
 	public String getBibtexForBook(@RequestParam(value = "isbn") String isbn) {
 		log.info("create bibtex for isbn: " + isbn);
-		Book book = bookRepository.findByIsbnLike(isbn).get(0);
+		Book book = bookRepository.findByIsbn(isbn);
+		if (book == null) {
+			return "Book has to be saved before Bibtex entry could be created";
+		}
+		
 		String fieldCheck = checkNecessaryField(book);
 		if (fieldCheck.isEmpty()) {
-			String result = "@BOOK{<br>"
-					+ "AUTHOR=\"";
+			String result = "@BOOK{"+ book.getName().replaceAll(" ", "_") + ",<br>"
+					+ "AUTHOR={";
 			for (Author author : book.getAuthors()) {
 				result += author.getName() + " and ";
 			}
-			result.substring(0, result.length() - 5); // remove last and
-			result += "\",<br>TITLE=\"" + book.getName()
-				+ "\",<br>PUBLISHER=\"" + book.getPublisher()
-				+ "\",<br>YEAR=\"" + book.getYear() + "\"";
+			result = result.substring(0, result.length() - 7); // remove last and
+			result += "},<br>TITLE={" + book.getName()
+				+ "},<br>PUBLISHER={" + book.getPublisher()
+				+ "},<br>YEAR={" + book.getYear() + "}";
 			
 			// Add additional Fields
-			// volume or number, series, address, edition, month, note, isbn
-			result += ",<br>ISBN:" + book.getIsbn();
+			// volume or number, series, address(verlagsort), edition(Auflage), month, note, isbn, doi
+			result += ",<br>ISBN={" + book.getIsbn();
 			
-			return result + "<br>}";
+			return result + "}<br>}";
 		}
 		return fieldCheck;
 	}
@@ -163,7 +174,7 @@ public class BookController {
 			result += " - AUTHORS";
 		}
 		if (book.getCategory()== null || book.getCategory().getName() == null || book.getCategory().getName().isEmpty()) {
-			result += " - Category";
+			result += " - CATEGORY";
 		}
 		if (book.getPublisher() == null || book.getPublisher().isEmpty()) {
 			result += " - PUBLISHER";

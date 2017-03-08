@@ -34,6 +34,24 @@ $(function() {
 	 * Search-field functionality end
 	 */
 	
+	/*
+	 * File Upload. Usage with  $(':file').on('fileselect', function(event, numFiles, label) {CODE}
+	 */
+	$(document).on('change', ':file', function(input) {
+		console.log("FILE UPLOAD");
+		console.log(input);
+		
+		// Show uploaded Files
+		var files = input.target.files; 
+		var output = [];
+		for (var i = 0, f; f = files[i]; i++) {
+			output.push('<li><strong>', f.name, '</strong> (', f.type || 'n/a', ') - ',
+				f.size, ' bytes</li>');
+		}
+		$('#file-list').innerHTML = '<ul>' + output.join('') + '</ul>';
+		sendFilesToRestApi(files);
+	});
+
 	$(window)
 			.bind(
 					"load resize",
@@ -110,6 +128,33 @@ function search(searchText) {
 	});
 }
 
+function sendFilesToRestApi(files) {
+
+	// Start ajax request for every file
+	for (let f of files) {
+		$.ajax({
+			headers : {
+			    'Accept' : 'application/json',
+			    'Content-Type' : 'application/json'
+			},
+			type : 'POST',
+			data : JSON.stringify(file),
+			dataType : 'json',
+			url: serverUrl + "books/readBibtexFile",
+			success: function(data) {
+				console.log("Successfully saved book in database.");
+				$("#alert-div").append(getSuccessAlertText("Successfully saved bibtex books in database."));
+			},
+			error: function(e) {
+				console.log("Could not save book.");
+				$("#alert-div").append(getErrorAlertText("Could not read bibtex file."));
+			}
+		});
+		
+		
+	}
+}
+
 // Attribute name from every object in array
 function getNameStringFromArray(authors, placeholder) {
 	var result = "";
@@ -122,6 +167,25 @@ function getNameStringFromArray(authors, placeholder) {
 	result = result.substring(0, result.length - placeholder.length);
 	console.log(result);
 	return result;
+}
+
+function getErrorAlertText(text) {
+	/* setTimeout(function() {
+	    $('.alert').fadeOut('slow');
+	    }, 10000); */ 
+	    // Erros should not close self.
+	return '<div id="error-alert" class="alert alert-danger alert-dismissable fade in">'
+    + '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'
+    + '<strong>Error!</strong> ' + text + '</div>';
+}
+
+function getSuccessAlertText(text) {
+	setTimeout(function() {
+	    $('.alert').fadeOut('slow');
+	    }, 6000);
+	return '<div id="success-alert" class="alert alert-success alert-dismissable fade in">'
+    + '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'
+    + '<strong>Success!</strong> ' + text + '</div>';
 }
 
 

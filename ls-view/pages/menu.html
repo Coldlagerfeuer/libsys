@@ -206,6 +206,16 @@
 					<li><a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
 					<li><a href="list-books.html"><i class="fa fa-th-list fa-fw"></i> All Books</a></li>
 					<li><a href="book.html"><i class="fa fa-book fa-fw"></i> New Book</a></li>
+					<!-- <li><a href="#" onclick="uploadFile();">Upload Bibtex File</a></li> -->
+					 <li>
+					 <!-- <i class="fa fa-book fa-fw"></i> -->
+					 <a href="#" onclick="document.getElementById('inputFileUploader').click();">
+					 	<i class="fa fa-plus fa-fw"></i>
+					 		 Upload Bibtex file ...
+					          <input id="inputFileUploader" type="file" name="files[]" multiple style="display: none;">
+						</a>
+						<output id="file-list"></output>
+					 </li>  
 				</ul>
 			</div>
 			<!-- /.sidebar-collapse -->

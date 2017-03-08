@@ -35,7 +35,7 @@ public class IsbndbDataProvider implements BookDataProvider {
 	 */
 	private static final String URL_S = "http://isbndb.com/api/v2/json/%s/book/%s";
 
-	private static final String API_KEY = "RZOMN8HX"; // TODO klartext ändern
+	private static final String API_KEY = "RZOMN8HX";
 
 	@Autowired
 	private AuthorController authorController;
@@ -60,8 +60,6 @@ public class IsbndbDataProvider implements BookDataProvider {
 	 */
 	@Override
 	public Book getBookDataForIsbn(String isbn) {
-		// TODO check for Internet connection
-		
 		RestTemplate restTemplate = getIsbndbRestTemplate();
 		ResponseIsdnDb responseObject = restTemplate.getForObject(String.format(URL_S, API_KEY, isbn),
 				ResponseIsdnDb.class);

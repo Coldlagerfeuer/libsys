@@ -131,7 +131,7 @@
                                 </li>
                                 <li><a href="#bibtex-pills" data-toggle="tab">Bibtex</a>
                                 </li>
-                                <li><a href="#messages-pills" data-toggle="tab">Messages</a>
+                                <li><a href="#comment-pills" data-toggle="tab">Comments</a>
                                 </li>
                                 <li id="settings-pills-tab" class="hidden"><a href="#settings-pills" data-toggle="tab">Settings</a>
                                 </li>
@@ -147,10 +147,31 @@
                                     <h4>Bibtex String</h4>
                                     <p class="well" id="bibtex-entry" contenteditable="true">Could not generate bibtex entry</p>
                                 </div>
-                                <div class="tab-pane fade" id="messages-pills">
-                                    <h4>Messages Tab</h4>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                                </div>
+                                <div class="tab-pane fade" id="comment-pills">
+                                    <h4>Comments Tab</h4>
+                                    <div class="panel-body">
+                                    <blockquote>
+		                                <p>Seite 42 ist besonders erwähnenswert .</p>
+		                                <small>
+		                                    <cite title="Source Title">Christian</cite>
+		                                </small>
+		                            </blockquote>
+                                    
+                                    <blockquote>
+		                            	<p>Auf Seite 73 wird das Strategy Pattern beschrieben.</p>
+		                                <small>
+		                                    <cite title="Source Title">Annika</cite>
+		                                </small>
+		                            </blockquote>
+                                    </div>
+                                    <div class="input-group custom-search-form">
+		                                <input type="text" class="form-control" placeholder="Enter comment">
+		                                <span class="input-group-btn">
+		                                <button class="btn btn-default" type="button">
+		                                    <i class="fa fa-pencil"></i>
+		                                </button>
+	                                </div>
+	                            </div>
                                 <div class="tab-pane fade" id="settings-pills">
                                     <h4>Settings Tab</h4>
                                     <div class="row">
@@ -170,6 +191,7 @@
                                     		<input id="book-year" class="form-control">
                                     	</div>
                                     </div> 
+                                    <h4></h4>
                                      <div class="row">
                                     	<div class="col-md-2">
                                     		<p class="text-right">Default Location:</p>
@@ -178,6 +200,7 @@
                                     		<input id="book-location-default" class="form-control">
                                     	</div>
                                     </div>
+                                    <h4></h4>
                                     <div class="row">
                                     	<div class="col-md-2">
                                     		<p class="text-right">Location:</p>
@@ -448,6 +471,9 @@
 				},
 				error: function(e) {
 					console.log(e);
+					console.log(e.responseText)
+					console.log("Could not save book.");
+					$("#alert-div").append(getErrorAlertText("Could not save book. </br>" + e.responseText));
 				}
 			});
 		}
@@ -465,26 +491,14 @@
 				success: function(data) {
 					console.log("Successfully saved book in database.");
 					$("#alert-div").append(getSuccessAlertText("Successfully saved book in database."));
+				},
+				error: function(e) {
+					console.log("Could not save book.");
+					$("#alert-div").append(getErrorAlertText("Could not save book."));
 				}
 			});
 		}
-		function getErrorAlertText(text) {
-			setTimeout(function() {
-			    $('.alert').fadeOut('slow');
-			    }, 3000);
-			return '<div id="error-alert" class="alert alert-danger alert-dismissable fade in">'
-            + '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'
-            + '<strong>Error!</strong> ' + text + '</div>';
-		}
 		
-		function getSuccessAlertText(text) {
-			setTimeout(function() {
-			    $('.alert').fadeOut('slow');
-			    }, 3000);
-			return '<div id="success-alert" class="alert alert-success alert-dismissable fade in">'
-            + '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'
-            + '<strong>Success!</strong> ' + text + '</div>';
-		}
 		
 		function toggleEditDesignClasses() {
 			$("#btn-save").toggleClass("hidden");
@@ -541,7 +555,7 @@
 			$("#book-year").val(book.year);
 			$("#book-location-default").val(book.defaultLocation);
 			$("#book-location").val(book.lentLocation);
-			lentButtonAvailable(book.lentLocation === "");
+			lentButtonAvailable(book.lentLocation !== "");
 		}
 		
 
