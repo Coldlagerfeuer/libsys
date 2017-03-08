@@ -138,16 +138,16 @@ function sendFilesToRestApi(files) {
 			    'Content-Type' : 'application/json'
 			},
 			type : 'POST',
-			data : JSON.stringify(file),
+			data : JSON.stringify(f),
 			dataType : 'json',
 			url: serverUrl + "books/readBibtexFile",
 			success: function(data) {
 				console.log("Successfully saved book in database.");
-				$("#alert-div").append(getSuccessAlertText("Successfully saved bibtex books in database."));
+				$("#alert-div").append(getSuccessAlertText("Successfully send bibtex file to server."));
 			},
 			error: function(e) {
 				console.log("Could not save book.");
-				$("#alert-div").append(getErrorAlertText("Could not read bibtex file."));
+				$("#alert-div").append(getErrorAlertText("Could not send or read bibtex file."));
 			}
 		});
 		
