@@ -1,7 +1,8 @@
 
-package main.isbndb.entities;
+package main.isbndataprovider.entities.isbndb;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -15,15 +16,15 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "name",
-    "id"
+    "index_searched",
+    "data"
 })
-public class AuthorData {
+public class ResponseIsdnDb {
 
-    @JsonProperty("name")
-    private String name;
-    @JsonProperty("id")
-    private String id;
+    @JsonProperty("index_searched")
+    private String indexSearched;
+    @JsonProperty("data")
+    private List<BookData> data = null;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -31,38 +32,38 @@ public class AuthorData {
      * No args constructor for use in serialization
      * 
      */
-    public AuthorData() {
+    public ResponseIsdnDb() {
     }
 
     /**
      * 
-     * @param id
-     * @param name
+     * @param indexSearched
+     * @param data
      */
-    public AuthorData(String name, String id) {
+    public ResponseIsdnDb(String indexSearched, List<BookData> data) {
         super();
-        this.name = name;
-        this.id = id;
+        this.indexSearched = indexSearched;
+        this.data = data;
     }
 
-    @JsonProperty("name")
-    public String getName() {
-        return name;
+    @JsonProperty("index_searched")
+    public String getIndexSearched() {
+        return indexSearched;
     }
 
-    @JsonProperty("name")
-    public void setName(String name) {
-        this.name = name;
+    @JsonProperty("index_searched")
+    public void setIndexSearched(String indexSearched) {
+        this.indexSearched = indexSearched;
     }
 
-    @JsonProperty("id")
-    public String getId() {
-        return id;
+    @JsonProperty("data")
+    public List<BookData> getData() {
+        return data;
     }
 
-    @JsonProperty("id")
-    public void setId(String id) {
-        this.id = id;
+    @JsonProperty("data")
+    public void setData(List<BookData> data) {
+        this.data = data;
     }
 
     @Override

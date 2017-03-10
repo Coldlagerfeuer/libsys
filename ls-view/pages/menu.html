@@ -10,11 +10,12 @@
 					class="icon-bar"></span>
 			</button>
 			<a class="navbar-brand" href="index.html">Libsys</a>
+		
 		</div>
 		<!-- /.navbar-header -->
 
 		<ul class="nav navbar-top-links navbar-right">
-<!-- 			<li class="dropdown"><a class="dropdown-toggle"
+			<!-- 			<li class="dropdown"><a class="dropdown-toggle"
 				data-toggle="dropdown" href="#"> <i class="fa fa-envelope fa-fw"></i>
 					<i class="fa fa-caret-down"></i>
 			</a>
@@ -173,11 +174,18 @@
 					</a></li>
 				</ul> /.dropdown-alerts</li>
 			/.dropdown -->
+			<li>
+				<div id="loading" class="loading hidden">
+					Loading content...
+					<img src="../img/ajax-loader.gif" style="width:150; padding-right:125px;"/>
+				</div>
+			</li>
 			<li class="dropdown"><a class="dropdown-toggle"
 				data-toggle="dropdown" href="#"> <i class="fa fa-user fa-fw"></i>
 					<i class="fa fa-caret-down"></i>
 			</a>
 				<ul class="dropdown-menu dropdown-user">
+				
 					<li><a href="#"><i class="fa fa-user fa-fw"></i> User
 							Profile</a></li>
 					<li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
@@ -195,27 +203,31 @@
 				<ul class="nav" id="side-menu">
 					<li class="sidebar-search">
 						<div class="input-group custom-search-form">
-							<input id="SearchField" type="text" class="form-control" placeholder="Search..."></input>
-							<span id="SearchButton" class="input-group-btn">
+							<input id="SearchField" type="text" class="form-control"
+								placeholder="Search..."></input> <span id="SearchButton"
+								class="input-group-btn">
 								<button class="btn btn-default" type="button">
 									<i class="fa fa-search"></i>
 								</button>
 							</span>
 						</div> <!-- /input-group -->
 					</li>
-					<li><a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
-					<li><a href="list-books.html"><i class="fa fa-th-list fa-fw"></i> All Books</a></li>
-					<li><a href="book.html"><i class="fa fa-book fa-fw"></i> New Book</a></li>
+					<li><a href="index.html"><i class="fa fa-dashboard fa-fw"></i>
+							Dashboard</a></li>
+					<li><a href="list-books.html"><i
+							class="fa fa-th-list fa-fw"></i> All Books</a></li>
+					<li><a href="book.html"><i class="fa fa-book fa-fw"></i>
+							New Book</a></li>
 					<!-- <li><a href="#" onclick="uploadFile();">Upload Bibtex File</a></li> -->
-					 <li>
-					 <!-- <i class="fa fa-book fa-fw"></i> -->
-					 <a href="#" onclick="document.getElementById('inputFileUploader').click();">
-					 	<i class="fa fa-plus fa-fw"></i>
-					 		 Upload Bibtex file ...
-					          <input id="inputFileUploader" type="file" name="files[]" multiple style="display: none;">
-						</a>
-						<output id="file-list"></output>
-					 </li>  
+					<li>
+						<!-- <i class="fa fa-book fa-fw"></i> --> <a href="#"
+						onclick="document.getElementById('inputFileUploader').click();">
+							<i class="fa fa-plus fa-fw"></i> Upload Bibtex file ... <input
+							id="inputFileUploader" type="file" name="files[]" multiple
+							style="display: none;">
+					</a> 
+					<div id="file-list"></div>
+					</li>
 				</ul>
 			</div>
 			<!-- /.sidebar-collapse -->

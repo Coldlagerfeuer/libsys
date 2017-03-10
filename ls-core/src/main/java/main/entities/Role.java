@@ -1,17 +1,9 @@
 package main.entities;
 
-import java.util.Set;
-
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 /**
  * @author n.frantzen <nils.frantzen@rwth-aachen.de>
@@ -31,7 +23,7 @@ public class Role {
         return id;
     }
     
-    private Role() {
+    protected Role() {
 		
 	}
     
@@ -43,7 +35,6 @@ public class Role {
 		super();
 		this.name = name;
 	}
-
 
 
 	public void setId(Long id) {

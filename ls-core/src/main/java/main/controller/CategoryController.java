@@ -25,6 +25,8 @@ import main.repository.TagRepository;
 public class CategoryController {
 
 	private static final Logger log = LoggerFactory.getLogger(CategoryController.class);
+	
+	private static final long UNKNOWN_CATEGORY_ID = 1L;
 
 	@Autowired
 	private TagRepository tagRepository;
@@ -38,6 +40,10 @@ public class CategoryController {
 	}
 
 	public Category saveCategory(Category category) {
+		if (category == null) {
+			return categoryRepository.findOne(UNKNOWN_CATEGORY_ID);
+		}
+		
 		log.info("Save new category: " + category.getName());
 		List<Category> dbresult = categoryRepository.findByName(category.getName());
 		if (dbresult.size() == 0) {

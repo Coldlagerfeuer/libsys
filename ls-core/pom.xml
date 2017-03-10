@@ -44,6 +44,12 @@
 			<scope>test</scope>
 		</dependency>
 
+ 		<!-- hot swapping, disable cache for template, enable live reload -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+        </dependency>
+
 		<!-- MySQL JDBC connector -->
 		<dependency>
 			<groupId>mysql</groupId>

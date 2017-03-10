@@ -29,7 +29,7 @@ import main.repository.AccountRepository;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
-	private static String URL = "https://localhost/index.html";
+//	private static String URL = "https://localhost/index.html";
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {

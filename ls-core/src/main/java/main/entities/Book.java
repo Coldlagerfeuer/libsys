@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Fetch;
@@ -28,7 +30,7 @@ public class Book {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="book_id")
+	@Column(name = "book_id")
 	private long bookId;
 
 	private String name;
@@ -40,26 +42,29 @@ public class Book {
 	@JoinColumn(name = "author_id")
 	private List<Author> authors;
 
-	private String publisher;
+	private String publisher = "";
 
 	private String isbn;
 
 	private int visibility = 0;
-	
+
 	private int year;
 
 	@ManyToOne
 	@JoinColumn(name = "category_id")
 	private Category category = new Category();
-	
+
 	@ManyToMany(fetch = FetchType.EAGER)
 	@Fetch(value = FetchMode.SUBSELECT)
 	@JoinColumn(name = "tag_id")
 	private Set<Tag> tags = Collections.emptySet();
-	
-	private String defaultLocation;
-	
-	private String lentLocation;
+
+	private String defaultLocation = "";
+
+	private String lentLocation = "";
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "commentId", orphanRemoval=true)
+	private List<Comment> comments = new ArrayList<>();
 
 	protected Book() {
 	}
@@ -206,8 +211,8 @@ public class Book {
 	public void setTags(Set<Tag> tags) {
 		this.tags = tags;
 	}
- 
-    /**
+
+	/**
 	 * @return the category
 	 */
 	public Category getCategory() {
@@ -215,7 +220,8 @@ public class Book {
 	}
 
 	/**
-	 * @param category the category to set
+	 * @param category
+	 *            the category to set
 	 */
 	public void setCategory(Category category) {
 		this.category = category;
@@ -229,7 +235,8 @@ public class Book {
 	}
 
 	/**
-	 * @param year the year to set
+	 * @param year
+	 *            the year to set
 	 */
 	public void setYear(int year) {
 		this.year = year;
@@ -243,7 +250,8 @@ public class Book {
 	}
 
 	/**
-	 * @param defaultLocation the defaultLocation to set
+	 * @param defaultLocation
+	 *            the defaultLocation to set
 	 */
 	public void setDefaultLocation(String defaultLocation) {
 		this.defaultLocation = defaultLocation;
@@ -257,15 +265,38 @@ public class Book {
 	}
 
 	/**
-	 * @param lentLocation the lentLocation to set
+	 * @param lentLocation
+	 *            the lentLocation to set
 	 */
 	public void setLentLocation(String lentLocation) {
 		this.lentLocation = lentLocation;
 	}
 
-	@Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
+	/**
+	 * @return the comments
+	 */
+	public List<Comment> getComments() {
+		return comments;
+	}
+
+	/**
+	 * @param comments
+	 *            the comments to set
+	 */
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
 	
+	/**
+	 * @param c
+	 */
+	public void addComment(Comment c) {
+		comments.add(c);
+	}
+
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
+
 }

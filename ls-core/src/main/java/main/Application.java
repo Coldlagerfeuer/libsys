@@ -79,10 +79,6 @@ public class Application {
 				// 9780596007126 -> Head First Design Patterns
 			}
 			
-			if (accountController.count() == 0) {
-				log.info("Create default User");
-				accountController.createNewUser("user", "password");
-			}
 		};
 	}
 

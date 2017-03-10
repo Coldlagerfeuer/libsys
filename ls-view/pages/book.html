@@ -39,8 +39,6 @@
 <script src="../dist/js/sb-admin-2.js"></script>
 
 <style type="text/css">
-
-
 </style>
 
 </head>
@@ -55,18 +53,21 @@
 
 
 		<div id="page-wrapper">
-			<div class="row" >
-				<div id="alert-div" class="col-lg-9">
-					<h1 id="book-title" class="page-header " contenteditable="false">Enter title</h1>
-				
+			<div class="row">
+				<div id="alert-div" class="col-lg-9 loading">
+					<h1 id="book-title" class="page-header " contenteditable="false">Enter
+						title</h1>
+
 				</div>
 				<div class="col-lg-3">
 					<h1>
-						<button id="btn-save" type="button" data-toggle="tooltip" data-placement="top" title="Save Book"
+						<button id="btn-save" type="button" data-toggle="tooltip"
+							data-placement="top" title="Save Book"
 							class="hidden btn btn-success btn-circle btn-xl pull-center">
 							<i class="fa fa-check"></i>
 						</button>
-						<button id="btn-delete" type="button" data-toggle="tooltip" data-placement="top" title="Delete Book"
+						<button id="btn-delete" type="button" data-toggle="tooltip"
+							data-placement="top" title="Delete Book"
 							class="hidden btn btn-danger btn-circle btn-xl pull-center">
 							<i class="fa fa-times"></i>
 						</button>
@@ -81,15 +82,16 @@
 			<!-- /.row -->
 
 			<div class="row">
-				<div class="col-md-3 " >
-					<span class="lead">Category: </span>
-					<span id="book-category" class="text-muted"></span>
-					<select id="book-category-select" class="selectpicker form-control hidden" data-live-search="true">
+				<div class="col-md-3 ">
+					<span class="lead">Category: </span> <span id="book-category"
+						class="text-muted"></span> <select id="book-category-select"
+						class="selectpicker form-control hidden" data-live-search="true">
 						<!-- Filled by JS -->
 					</select>
 				</div>
 				<div class=col-md-9>
-					<small id="book-tags"></small>
+					<label for="book-tags">Tags: </label> <small id="book-tags"
+						placeholder="Add tags"></small>
 				</div>
 			</div>
 
@@ -97,13 +99,13 @@
 				<div class="col-md-3">
 					<div class="row">
 						<div class="col-md-12">
-						 	<div class="panel panel-default">
-						 		<div class="panel-body">
+							<div class="panel panel-default">
+								<div class="panel-body">
 									<!-- COVER -->
-									<img  src="../img/placeholder-book.jpg" class="img-responsive" 
-									alt="No image available" id="book-image"
-									onerror="if (this.src != '../img/placeholder-book.jpg') this.src = '../img/placeholder-book.jpg';">
-									</div>
+									<img src="../img/placeholder-book.jpg" class="img-responsive"
+										alt="No image available" id="book-image"
+										onerror="if (this.src != '../img/placeholder-book.jpg') this.src = '../img/placeholder-book.jpg';">
+								</div>
 							</div>
 						</div>
 					</div>
@@ -117,104 +119,116 @@
 						<div class="col-md-12">
 							<!-- Lent button -->
 							<button id="btn-book-lent" type="button"
-								class="btn btn-primary btn-lg btn-block">Lent book</button>
+								class="btn btn-primary btn-lg btn-block" data-toggle="tooltip"
+								data-placement="right" title="">Lent book</button>
 						</div>
 					</div>
 				</div>
 				<div class="col-md-9">
-				<div class="panel panel-default">
-                        <!-- /.panel-heading -->
-                        <div class="panel-body">
-                            <!-- Nav tabs -->
-                            <ul class="nav nav-pills">
-                                <li class="active"><a href="#description-pills" data-toggle="tab">Description</a>
-                                </li>
-                                <li><a href="#bibtex-pills" data-toggle="tab">Bibtex</a>
-                                </li>
-                                <li><a href="#comment-pills" data-toggle="tab">Comments</a>
-                                </li>
-                                <li id="settings-pills-tab" class="hidden"><a href="#settings-pills" data-toggle="tab">Settings</a>
-                                </li>
-                            </ul>
+					<div class="panel panel-default">
+						<!-- /.panel-heading -->
+						<div class="panel-body">
+							<!-- Nav tabs -->
+							<ul class="nav nav-pills">
+								<li class="active"><a href="#description-pills"
+									data-toggle="tab">Description</a></li>
+								<li><a href="#bibtex-pills" data-toggle="tab">Bibtex</a></li>
+								<li><a href="#comment-pills" data-toggle="tab">Comments</a>
+								</li>
+								<li id="settings-pills-tab" class="hidden"><a
+									href="#settings-pills" data-toggle="tab">Settings</a></li>
+							</ul>
 
-                            <!-- Tab panes -->
-                            <div class="tab-content">
-                                <div class="tab-pane fade in active" id="description-pills">
-                                    <h4></h4>
-                                    <p id="book-description">No description available</p>
-                                </div>
-                                <div class="tab-pane fade" id="bibtex-pills">
-                                    <h4>Bibtex String</h4>
-                                    <p class="well" id="bibtex-entry" contenteditable="true">Could not generate bibtex entry</p>
-                                </div>
-                                <div class="tab-pane fade" id="comment-pills">
-                                    <h4>Comments Tab</h4>
-                                    <div class="panel-body">
-                                    <blockquote>
-		                                <p>Seite 42 ist besonders erwähnenswert .</p>
-		                                <small>
-		                                    <cite title="Source Title">Christian</cite>
-		                                </small>
-		                            </blockquote>
-                                    
-                                    <blockquote>
-		                            	<p>Auf Seite 73 wird das Strategy Pattern beschrieben.</p>
-		                                <small>
-		                                    <cite title="Source Title">Annika</cite>
-		                                </small>
-		                            </blockquote>
-                                    </div>
-                                    <div class="input-group custom-search-form">
-		                                <input type="text" class="form-control" placeholder="Enter comment">
-		                                <span class="input-group-btn">
-		                                <button class="btn btn-default" type="button">
-		                                    <i class="fa fa-pencil"></i>
-		                                </button>
-	                                </div>
-	                            </div>
-                                <div class="tab-pane fade" id="settings-pills">
-                                    <h4>Settings Tab</h4>
-                                    <div class="row">
-                                    	<div class="col-md-2">
-                                    		<p class="text-right">Publisher:</p>
-                                    	</div>
-                                    	<div class="col-md-10">
-                                    		<input id="book-publisher" class="form-control">
-                                    	</div>
-                                    </div>
-                                    <h4></h4>
-                                    <div class="row">
-                                    	<div class="col-md-2">
-                                    		<p class="text-right">Year:</p>
-                                    	</div>
-                                    	<div class="col-md-10">
-                                    		<input id="book-year" class="form-control">
-                                    	</div>
-                                    </div> 
-                                    <h4></h4>
-                                     <div class="row">
-                                    	<div class="col-md-2">
-                                    		<p class="text-right">Default Location:</p>
-                                    	</div>
-                                    	<div class="col-md-10">
-                                    		<input id="book-location-default" class="form-control">
-                                    	</div>
-                                    </div>
-                                    <h4></h4>
-                                    <div class="row">
-                                    	<div class="col-md-2">
-                                    		<p class="text-right">Location:</p>
-                                    	</div>
-                                    	<div class="col-md-10">
-                                    		<input id="book-location" class="form-control">
-                                    	</div>
-                                    </div>  
-                                </div>
-                            </div>
-                        </div>
-                        <!-- /.panel-body -->
-                        
-                    </div>
+							<!-- Tab panes -->
+							<div class="tab-content">
+								<div class="tab-pane fade in active" id="description-pills">
+									<h4></h4>
+									<p id="book-description">No description available</p>
+								</div>
+								<div class="tab-pane fade" id="bibtex-pills">
+									<h4>Bibtex String</h4>
+									<p class="well" id="bibtex-entry" contenteditable="true">Could
+										not generate bibtex entry</p>
+								</div>
+								<div class="tab-pane fade" id="comment-pills">
+									<h4>Comments Tab</h4>
+									<div class="panel-body" id="comments">
+										<blockquote>
+											<p>Seite 42 ist besonders erwähnenswert .</p>
+											<small> <cite>Christian</cite>
+											</small>
+										</blockquote>
+
+										<blockquote>
+											<p>Auf Seite 73 wird das Strategy Pattern beschrieben.</p>
+											<small> <cite>Annika</cite>
+											</small>
+										</blockquote>
+									</div>
+									<div class="input-group custom-search-form">
+										<input id="input-comment" type="text" class="form-control"
+											placeholder='Enter "comment - author"'> <span
+											class="input-group-btn">
+											<button id="btn-comment" class="btn btn-default"
+												type="button">
+												<i class="fa fa-pencil"></i>
+											</button>
+										</span>
+									</div>
+								</div>
+								<div class="tab-pane fade" id="settings-pills">
+									<h4>Settings Tab</h4>
+
+									<div class="row">
+										<div class="col-md-2">
+											<p class="text-right">ISBN:</p>
+										</div>
+										<div class="col-md-10">
+											<input id="book-isbn" class="form-control" disabled="">
+										</div>
+									</div>
+									<h4></h4>
+									<div class="row">
+										<div class="col-md-2">
+											<p class="text-right">Publisher:</p>
+										</div>
+										<div class="col-md-10">
+											<input id="book-publisher" class="form-control">
+										</div>
+									</div>
+									<h4></h4>
+									<div class="row">
+										<div class="col-md-2">
+											<p class="text-right">Year:</p>
+										</div>
+										<div class="col-md-10">
+											<input id="book-year" class="form-control">
+										</div>
+									</div>
+									<h4></h4>
+									<div class="row">
+										<div class="col-md-2">
+											<p class="text-right">Default Location:</p>
+										</div>
+										<div class="col-md-10">
+											<input id="book-location-default" class="form-control">
+										</div>
+									</div>
+									<h4></h4>
+									<div class="row">
+										<div class="col-md-2">
+											<p class="text-right">Location:</p>
+										</div>
+										<div class="col-md-10">
+											<input id="book-location" class="form-control">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- /.panel-body -->
+
+					</div>
 				</div>
 			</div>
 			<!-- /.row -->
@@ -243,7 +257,7 @@
 	<script type="text/javascript">
 		var book;	
 		var currentModalId;
-	
+		
 		$(document).ready(function() {
 
 			// Fill Categories
@@ -251,7 +265,6 @@
 				type: "GET",				
 				url: serverUrl + "categories/getAllCategories",
 				success:function(data) {
-					console.log("categorie success");
 	 				for (var categoryId in data) {
 	 					var category = data[categoryId];
 						$("#book-category-select").append('<option value="' + category.name + '">' + category.name + '</option>');
@@ -294,6 +307,7 @@
 		}
 		
 		function updateSiteWithUrl(url) {
+			$("#loading").show();
 			$.ajax({
 				url: url
 			}).then(function(data) {
@@ -313,6 +327,7 @@
 				} else {
 					console.log("No or multiple books found");
 				}
+				$("#loading").hide();
 			});
 		}
 		
@@ -356,9 +371,9 @@
 
 		$(document).on('click', '#btn-book-lent', function() {
 			console.log("Lent book");
-			if (book.lent_location === '') {
+			if (book.lentLocation == "") {
 			
-			var modalId = "#modalLent"
+				var modalId = "#modalLent"
 				$('#modalPlaceholder').load('dialogs.html '+ modalId , function() {
 					currentModalId = modalId;
 				    $(modalId).modal('toggle');
@@ -394,14 +409,17 @@
 			});
 		}
 		
+		
 		function lentButtonAvailable(available) {
 			console.log("lentButtonAvailable");
 			console.log(available);
 			var btnRef = $("#btn-book-lent");
 			if (!available) {
 				btnRef.addClass("disabled");
+				$("#btn-book-lent").prop('title', "Can be found in: " + book.lentLocation); 
 			} else {
 				btnRef.removeClass("disabled");
+				$("#btn-book-lent").prop('title', "Can be found in: " + book.defaultLocation);
 			}
 		}
 		
@@ -422,15 +440,74 @@
 		$(document).on('click', '#btn-save', function() {
 			console.log(book);
 			if (book != null) {
-				saveBookToDB();
+				if (neededFieldFilled()) {
+					toggleEditDesignClasses();
+					updateAndSaveBook();
+				}
 			} else {
 				console.log("No saved book found");
 			}
 		});
-
-		function saveBookToDB(){
-			toggleEditDesignClasses();
+		
+		$(document).on('click', '#btn-comment', function() {
+			if (book.id != 0) { 
+				
+				console.log("Save new comment");
+				var comment = $("#input-comment").val();
+				console.log(comment);
+				$.ajax({
+					headers : {
+					    'Accept' : 'application/json',
+					    'Content-Type' : 'application/json'
+					},
+					type : 'POST',
+					data : comment,
+					dataType : 'json',
+					url: serverUrl + "books/comments/" + book.id,
+					success: function(data) {
+						if (data !== null) {
+							console.log("comment added");
+							$("#alert-div").append(getSuccessAlertText("Comment added."));
+							/* add comment to view */
+							$("#comments").append(getCommentHtml(data));
+						} else {
+							console.log("Comment could not be saved");
+							$("#alert-div").append(getErrorAlertText("Comment could not be saved, wrong format"));
+						}
+					},
+					error: function(e) {
+						console.log(e);
+						console.log(e.responseText);
+						console.log("Comment could not be saved.");
+						$("#alert-div").append(getErrorAlertText("Comment could not be saved. </br>" + e.responseText));
+					}
+				});
+			} else {
+				$("#alert-div").append(getErrorAlertText("Book has to be saved before commenting"));
+			}
+		});
+		
+		function getCommentHtml(data) {
+			/* <blockquote>
+	                <p>Seite 42 ist besonders erwähnenswert .</p>
+	                <small>
+	                    <cite>Christian</cite>
+	                </small>
+	            </blockquote> */
 			
+			return "<blockquote><p>" + data.commentText + "</p><small><cite>" + data.authorName + "</cite></small></blockquote>";
+		}
+		
+		function neededFieldFilled() {
+			if ($("#book-location-default").val() == "") {
+				$("#alert-div").append(getErrorAlertText("Please fill attribute 'default location' in settings tab."));
+				return false;
+			}
+			
+			return true;
+		}
+		
+		function updateBookValuesWithView() {
 			book.title = $("#book-title").text();
 			book.description = $("#book-description").html();
 			var authorsSplit = $("#book-author").html().split("<br>");
@@ -444,9 +521,16 @@
 			book.category.name = $("#book-category").text();
 			book.publisher = $("#book-publisher").val();
 			book.year = $("#book-year").val();
-			book.default_location = $("#book-location-default").val();
-			book.lent_location = $("#book-location").val();
-			
+			book.defaultLocation = $("#book-location-default").val();
+			book.lentLocation = $("#book-location").val();
+		}
+		
+		function updateAndSaveBook() {
+			updateBookValuesWithView();
+			saveBookToDB();
+		}
+		
+		function saveBookToDB(){
 			console.log($("#book-author").text());
 			console.log(book.authors);
 			
@@ -463,7 +547,7 @@
 					if (data == true) {
 						console.log("update succesful");
 						$("#alert-div").append(getSuccessAlertText("Successfully updated book in database."));
-						
+							
 					} else {
 						console.log("update failed, save new book");
 						saveNewBook(book);
@@ -471,7 +555,7 @@
 				},
 				error: function(e) {
 					console.log(e);
-					console.log(e.responseText)
+					console.log(e.responseText);
 					console.log("Could not save book.");
 					$("#alert-div").append(getErrorAlertText("Could not save book. </br>" + e.responseText));
 				}
@@ -479,6 +563,7 @@
 		}
 		
 		function saveNewBook(book) {
+			$("#loading").show();
 			$.ajax({
 				headers : {
 				    'Accept' : 'application/json',
@@ -489,18 +574,23 @@
 				dataType : 'json',
 				url: serverUrl + "books/saveNewBook",
 				success: function(data) {
-					console.log("Successfully saved book in database.");
+					console.log("Successfully saved book in database. ID:" + data);
+					book.id = data;
+					$("#alert-div").append(getInfoAlertText("Book can be found in: " + book.defaultLocation));
 					$("#alert-div").append(getSuccessAlertText("Successfully saved book in database."));
 				},
 				error: function(e) {
 					console.log("Could not save book.");
 					$("#alert-div").append(getErrorAlertText("Could not save book."));
+				},
+				always: function() {
+					$("#loading").hide();
 				}
 			});
 		}
 		
-		
 		function toggleEditDesignClasses() {
+			
 			$("#btn-save").toggleClass("hidden");
 			$("#btn-delete").toggleClass("hidden");
 			$("#settings-pills-tab").toggleClass("hidden");
@@ -537,25 +627,36 @@
 			var description = (book.description == "") ? "No description available" : book.description;
 			$("#book-description").html(description);
 			$("#book-author").html(getNameStringFromArray(book.authors, "<br>"));
-			$("#book-category").html('<a href=list-books.html?category=' + book.category.name +'>' + book.category.name + '</a>');
+			$("#book-category").html('<a href=list-books.html&category=' + book.category.name +'>' + book.category.name + '</a>');
 			$("#book-category-select").val(book.category.name);			
 			// book.tags = ["tag1", "tag2", "tag3"]; Example values 
 			var tagString = "";
 			for(var i in book.tags) {
 				var tag = book.tags[i];
-				tagString +=  '<a href=list-books.html?tag=' + tag.name +'>' + tag.name + '</a>, ' ;
+				tagString +=  '<a href=list-books.html&tag=' + tag.name +'>' + tag.name + '</a>, ' ;
 			}
 			// Remove the last comma
 			$("#book-tags").html(tagString.substring(0, tagString.length - 3));
 			
 			//Settings Tab
-			console.log("book.lent_location:" + book.lentLocation +", " );
-			console.log(book.lentLocation === "");
+			console.log("ISBN:" +book.isbn)
+			$("#book-isbn").val(book.isbn);
 			$("#book-publisher").val(book.publisher);
 			$("#book-year").val(book.year);
 			$("#book-location-default").val(book.defaultLocation);
 			$("#book-location").val(book.lentLocation);
-			lentButtonAvailable(book.lentLocation !== "");
+			console.log(book.lentLocation);
+			console.log(book.lentLocation == "");
+			
+			// Comments
+			console.log("Comments:" + book.comments);
+			for (var i = 0; i < book.comments.length; i++) {
+				var comment = book.comments[i];
+				console.log(comment);
+				$("#comments").append(getCommentHtml(comment));
+			}
+			
+			lentButtonAvailable(book.lentLocation == "");
 		}
 		
 

@@ -1,5 +1,6 @@
 package main.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -60,6 +61,18 @@ public class AuthorController {
 		}
 		return authors;
 		
+	}
+
+	/**
+	 * @param authors
+	 * @return
+	 */
+	public List<Author> createAuthorObjects(List<String> authors) {
+		List<Author> result = new ArrayList<>();
+		for (String name : authors) {
+			result.add(createAuthorObject(name));
+		}
+		return result;
 	}
 	
 }

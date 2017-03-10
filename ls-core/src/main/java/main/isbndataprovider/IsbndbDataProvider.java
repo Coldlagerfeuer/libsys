@@ -1,4 +1,4 @@
-package main.isbndb;
+package main.isbndataprovider;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,9 +16,9 @@ import org.springframework.web.client.RestTemplate;
 import main.controller.AuthorController;
 import main.entities.Author;
 import main.entities.Book;
-import main.isbndb.entities.AuthorData;
-import main.isbndb.entities.BookData;
-import main.isbndb.entities.ResponseIsdnDb;
+import main.isbndataprovider.entities.isbndb.AuthorData;
+import main.isbndataprovider.entities.isbndb.BookData;
+import main.isbndataprovider.entities.isbndb.ResponseIsdnDb;
 import main.repository.BookDataProvider;
 
 /**
@@ -28,14 +28,15 @@ import main.repository.BookDataProvider;
 @Component
 public class IsbndbDataProvider implements BookDataProvider {
 
-	private static final Logger log = LoggerFactory.getLogger(IsbndbDataProvider.class);
+	private static final Logger log = LoggerFactory.getLogger(GoogleBooksDataProvider.class);
 	
 	/**
-	 * %s = my-api-key %n = isbn as long
+	 * %s = my-api-key %s = isbn as string
 	 */
 	private static final String URL_S = "http://isbndb.com/api/v2/json/%s/book/%s";
-
+	
 	private static final String API_KEY = "RZOMN8HX";
+
 
 	@Autowired
 	private AuthorController authorController;

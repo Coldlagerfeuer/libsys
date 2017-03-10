@@ -117,17 +117,23 @@
 	<script type="text/javascript">
 		
 		$(document).ready(function() {
-			var name = getQueryVariable("name");
-			console.log(name);
+			
 			 $.ajax({
 				url : serverUrl + "books"
 		    }).then(function(data) {
+		    	var name = getQueryVariable("name");
+				var tag = getQueryVariable("tag");
+			console.log(tag);
 				$('#book-item-count').html(data.length);
-				for ( var i in data) {
+				for (var i in data) {
 				    book = data[i];
-				    
+			console.log(book.tags);
+			console.log($.grep(book.tags, function(e){ return e.name == tag; }));
+			
+			
 				    var bookRow = '<tr';
-				    if (null != name && book.name.includes(name)) {
+				    if ((null != name && book.name.includes(name))
+				    		||(null != tag && ($.grep(book.tags, function(e){ return e.name == tag; }).length != 0))) {
 				    	bookRow += ' class="active" ';
 				    } else {
 				    	
@@ -136,6 +142,7 @@
 					var tagString = "";
 					for(var i in book.tags) {
 						var tag = book.tags[i];
+						console.log(tag.name + " - " + book.tags.indexOf(tag))
 						tagString +=  tag.name + ', ' ;
 					}
 					var lentinfo = "";

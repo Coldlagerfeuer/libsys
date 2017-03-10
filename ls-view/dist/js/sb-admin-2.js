@@ -43,12 +43,16 @@ $(function() {
 		
 		// Show uploaded Files
 		var files = input.target.files; 
+		console.log(files);
+		console.log(files[0]);
+		console.log(files[0].name);
 		var output = [];
 		for (var i = 0, f; f = files[i]; i++) {
 			output.push('<li><strong>', f.name, '</strong> (', f.type || 'n/a', ') - ',
 				f.size, ' bytes</li>');
 		}
-		$('#file-list').innerHTML = '<ul>' + output.join('') + '</ul>';
+		console.log(output.join(''));
+		$('#file-list').html('<ul>' + output.join('') + '</ul>');
 		sendFilesToRestApi(files);
 	});
 
@@ -108,7 +112,6 @@ function getQueryVariable(variable) {
 }
 
 function search(searchText) {
-	console.log("PING");
 	// If searchText = bookname -> open book website, else site with search results
 	$.ajax({
 		url : serverUrl + "books/getByName?name=" + searchText
@@ -129,25 +132,33 @@ function search(searchText) {
 }
 
 function sendFilesToRestApi(files) {
-
 	// Start ajax request for every file
 	for (let f of files) {
+		console.log(f);
+		console.log(f.name);
+		console.log(JSON.stringify(f));
+		var formData = new FormData();
+		formData.append('file', f);
 		$.ajax({
-			headers : {
-			    'Accept' : 'application/json',
-			    'Content-Type' : 'application/json'
-			},
 			type : 'POST',
-			data : JSON.stringify(f),
-			dataType : 'json',
+			data : formData,
+			processData: false,  // tell jQuery not to process the data
+			contentType: false,  // tell jQuery not to set contentType
 			url: serverUrl + "books/readBibtexFile",
 			success: function(data) {
-				console.log("Successfully saved book in database.");
-				$("#alert-div").append(getSuccessAlertText("Successfully send bibtex file to server."));
+				console.log(data);
+				if (data !== null) {
+					console.log("Successfully saved books in database.");
+					$("#alert-div").append(getSuccessAlertText("Successfully send bibtex file to server.</br>" +
+							"Added " + data[1] + " new books from " + data[0] + " recognized entries."));
+				} else {
+					console.log("Could not read file.");
+					$("#alert-div").append(getErrorAlertText("Could not read bibtex file."));
+				}
 			},
 			error: function(e) {
-				console.log("Could not save book.");
-				$("#alert-div").append(getErrorAlertText("Could not send or read bibtex file."));
+				console.log("Could not send book.");
+				$("#alert-div").append(getErrorAlertText("Could not send bibtex file."));
 			}
 		});
 		
@@ -187,6 +198,13 @@ function getSuccessAlertText(text) {
     + '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'
     + '<strong>Success!</strong> ' + text + '</div>';
 }
+
+function getInfoAlertText(text) {
+	return '<div id="info-alert class="alert alert-info alert-dismissable fade in">'
+    + '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'
+    + '<strong>Info!</strong> ' + text + '</div>';
+}
+
 
 
 String.prototype.replaceAll = function(search, replace){

@@ -158,7 +158,7 @@
 				<div class="col-lg-12">
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							<i class="fa fa-bell fa-fw"></i> Saved Books Panel
+							<i class="fa fa-bell fa-fw"></i> Latest added books
 						</div>
 						<!-- /.panel-heading -->
 						<div class="panel-body">
@@ -192,22 +192,16 @@
 
 
 	<script type="text/javascript">
-	
-
-	var booknames = []; // For autocomplete
+	var showCount = 5;
 	
 	$(document).ready(function() {
+		
 		 $.ajax({
-			url : serverUrl + "books"
+			url : serverUrl + "books/latest" + showCount
 	    }).then(function(data) {
-			$('#book-item-count').html(data.length);
-			for ( var i in data) {
+			for (var i in data) {
 			    book = data[i];
 			    console.log(book);
-			    booknames.push(book.name);
-				if (i >= 5) {
-					continue;
-			    }
 			    $('#book-items').append(
 				    '<a href="book.html?name=' + book.name + '" class="list-group-item"> <i class="fa fa-comment fa-fw"></i> ' 
 				    + book.name+ '<span class="pull-right text-muted small"><em>' + book.authors[0].name + '</em> </span>'
@@ -216,11 +210,14 @@
 			
 		});
 		 
+		 
+		 
 		$.ajax({
-			url: serverUrl + "books/getLentBookCount"
+			url: serverUrl + "books/getBookCounts"
 		}).then(function(data) {
-			$('#book-item-count-lent').html(data);	
-		
+			console.log("Counts:" + data);
+			$('#book-item-count').html(data[0]);
+			$('#book-item-count-lent').html(data[1]);	
 		});
 	
 	

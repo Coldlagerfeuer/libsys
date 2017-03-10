@@ -1,5 +1,5 @@
 
-package main.isbndb.entities;
+package main.isbndataprovider.entities.isbndb;
 
 import java.util.HashMap;
 import java.util.List;
