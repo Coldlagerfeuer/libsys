@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -95,6 +96,7 @@ public class BookController {
 		} else {
 			result = dbResultList.get(0);
 		}
+		log.info("returned Book entity: " + result.toString());
 		return result;
 	}
 
@@ -109,6 +111,7 @@ public class BookController {
 		} else {
 			result = dbResultList.get(0);
 		}
+		log.info("returned Book entity: " + result.toString());
 		return result;
 	}
 
@@ -238,9 +241,7 @@ public class BookController {
 	public boolean deleteBook(@RequestParam(value = "isbn") String isbn) {
 		Book book = bookRepository.findByIsbnLike(isbn).get(0);
 		if (book != null) {
-			for (Comment comment : commentRepository.findByBookBookId(book.getId())) {
-				commentRepository.delete(comment);
-			}
+			book.setComments(Collections.emptyList());
 			bookRepository.delete(book);
 			return true;
 		}
@@ -325,11 +326,12 @@ public class BookController {
 		 */
 		Book b = bookRepository.findOne(Long.parseLong(bookId));
 		Comment c = new Comment(parts[0], parts[1]);
-		c.setBook(b);
 		c = commentRepository.save(c);
 
-		// Last comment will be the newly added comment
-		return c;
+		b.addComment(c);
+		bookRepository.save(b);
+		
+		return c; 
 
 	}
 

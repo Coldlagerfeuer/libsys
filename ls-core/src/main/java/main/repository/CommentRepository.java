@@ -14,7 +14,4 @@ import main.entities.Comment;
  */
 public interface CommentRepository extends CrudRepository<Comment, Long> {
 
-	Iterable<Comment> findByBookBookId(long bookId);
-
-	
 }

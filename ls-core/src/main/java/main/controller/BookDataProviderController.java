@@ -69,24 +69,32 @@ public class BookDataProviderController {
 	 * @return
 	 */
 	private Book getFilledBook(Book resultBook, Book book) {
-		Book result = new Book(resultBook.getName(), resultBook.getIsbn());
-		result.setCategory(resultBook.getCategory() == null ? book.getCategory() : resultBook.getCategory());
+		if (book == null) {
+			return resultBook;
+		}
+		resultBook.setCategory(resultBook.getCategory() == null ? book.getCategory() : resultBook.getCategory());
 		log.info("DESC: " + resultBook.getDescription() + " | " + book.getDescription());
-		result.setDescription(resultBook.getDescription().isEmpty() ? book.getDescription() : resultBook.getDescription());
-		result.setPublisher(resultBook.getPublisher().isEmpty() ? book.getPublisher() : resultBook.getPublisher());
-		result.setYear(resultBook.getYear() == 0 ? book.getYear() : resultBook.getYear());
+		log.info((resultBook.getDescription() == null) + "");
+		log.info((resultBook.getDescription().isEmpty()) + "");
+		if (resultBook.getDescription() == null || resultBook.getDescription().isEmpty()) {
+			resultBook.setDescription(book.getDescription());
+		}
+		if (resultBook.getPublisher() == null || resultBook.getPublisher().isEmpty()) {
+			resultBook.setPublisher(book.getPublisher());
+		} 
+		resultBook.setYear(resultBook.getYear() == 0 ? book.getYear() : resultBook.getYear());
 		
 		Set<Tag> tags = new HashSet<>();
 		tags.addAll(resultBook.getTags());
 		tags.addAll(book.getTags());
-		result.setTags(tags);
+		resultBook.setTags(tags);
 		
 		Set<Author> authors = new HashSet<>();
 		authors.addAll(resultBook.getAuthors());
 		authors.addAll(book.getAuthors());
-		result.setAuthors(new ArrayList<>(authors));
+		resultBook.setAuthors(new ArrayList<>(authors));
 		
-		return result;
+		return resultBook;
 	}
 
 	

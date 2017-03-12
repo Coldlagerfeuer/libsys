@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -21,6 +20,8 @@ import javax.persistence.OneToMany;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author n.frantzen <nils.frantzen@rwth-aachen.de>
@@ -28,6 +29,8 @@ import org.hibernate.annotations.FetchMode;
 @Entity
 public class Book {
 
+	private static final Logger log = LoggerFactory.getLogger(Book.class);
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "book_id")
@@ -63,7 +66,7 @@ public class Book {
 
 	private String lentLocation = "";
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "commentId", orphanRemoval=true)
+	@OneToMany(orphanRemoval = true)
 	private List<Comment> comments = new ArrayList<>();
 
 	protected Book() {
@@ -284,7 +287,9 @@ public class Book {
 	 *            the comments to set
 	 */
 	public void setComments(List<Comment> comments) {
-		this.comments = comments;
+		for (Comment comment : comments) {
+			addComment(comment);
+		}
 	}
 	
 	/**

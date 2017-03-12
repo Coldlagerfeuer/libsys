@@ -32,7 +32,7 @@ import main.repository.BookDataProvider;
 public class GoogleBooksDataProvider implements BookDataProvider {
 
 	private static final Logger log = LoggerFactory.getLogger(GoogleBooksDataProvider.class);
-	
+
 	/**
 	 * %s = my-api-key %n = isbn as long
 	 */
@@ -40,10 +40,10 @@ public class GoogleBooksDataProvider implements BookDataProvider {
 
 	@Autowired
 	private AuthorController authorController;
-	
+
 	@Autowired
 	private CategoryController categoryController;
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -71,42 +71,42 @@ public class GoogleBooksDataProvider implements BookDataProvider {
 			// No book found for this isbn
 			return null;
 		}
-		
+
 		// Call self link for better description
 		Item item = restTemplate.getForObject(responseObject.getItems().get(0).getSelfLink(), Item.class);
-		
+
 		VolumeInfo info = item.getVolumeInfo();
 		Book result = new Book(info.getTitle(), isbn);
 		result.setAuthors(authorController.createAuthorObjects(info.getAuthors()));
 		result.setDescription(info.getDescription());
 		result.setPublisher(info.getPublisher());
-		
+
 		SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy");
 		try {
-			// Convert date in format "yyyy-MM-dd" to "yyyy" 
+			// Convert date in format "yyyy-MM-dd" to "yyyy"
 			String year = formatter.format(parser.parse(info.getPublishedDate()));
 			result.setYear(Integer.parseInt(year));
 		} catch (ParseException e) {
 			log.error("Date could not be parsed");
 			log.error(e.getMessage());
 		}
-		
+
 		// We have only one main-category so the google categories are our tags
 		Set<Tag> tags = new HashSet<>();
-		for (String categoryString : info.getCategories()) {
-			String[] entries = categoryString.split("/");
-			for (String tagName : entries) {
-				tags.add(categoryController.saveTag(new Tag(tagName.trim())));
+		if (info.getCategories() != null) {
+			for (String categoryString : info.getCategories()) {
+				String[] entries = categoryString.split("/");
+				for (String tagName : entries) {
+					tags.add(categoryController.saveTag(new Tag(tagName.trim())));
+				}
 			}
 		}
 		result.setTags(tags);
-		
-		
-		return result; 
+
+		return result;
 	}
 
-	
 	/**
 	 * Add the {@link MediaType#APPLICATION_OCTET_STREAM} to the supported types
 	 * of the {@link MappingJackson2HttpMessageConverter}, because the isdndb

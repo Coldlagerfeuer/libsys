@@ -3,13 +3,11 @@
  */
 package main.entities;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -27,9 +25,6 @@ public class Comment {
 
 	private String commentText;
 	private String authorName;
-	
-	@ManyToOne(cascade = CascadeType.ALL)
-	private Book book;
 	
 	protected Comment() {
 	}
@@ -74,22 +69,6 @@ public class Comment {
 	 */
 	public long getCommentId() {
 		return commentId;
-	}
-
-	
-	
-	/**
-	 * @return the bookId
-	 */
-	public Book getBook() {
-		return book;
-	}
-
-	/**
-	 * @param bookId the bookId to set
-	 */
-	public void setBook(Book book) {
-		this.book = book;
 	}
 
 	/*
